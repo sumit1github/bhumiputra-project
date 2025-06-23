@@ -1,0 +1,155 @@
+/* Room Availability and Reservation Sections */
+.dashboard-section-card {
+  background-color: white;
+  border-radius: 10px;
+}
+
+.c-pad {
+  padding: 2rem;
+}
+
+.section-title {
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+/* Room Availability Progress Bar */
+.room-progress-container {
+  margin-bottom: 1.5rem;
+}
+
+.room-progress-bar {
+  display: flex;
+  height: 58px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.progress-occupied {
+  background-color: #ff9f7a;
+  width: 42.7%;
+  color: white;
+}
+
+.progress-reserved {
+  background-color: #ffb999;
+  width: 29.7%;
+  color: white;
+}
+
+.progress-available {
+  background-color: #ffd4bb;
+  width: 19.5%;
+  color: #666;
+}
+
+.progress-not-ready {
+  background-color: #c8f7d8;
+  width: 8.5%;
+  color: #666;
+}
+
+/* Room Stats */
+.room-stat-item {
+  display: flex;
+  height: 110px;
+  align-items: center;
+}
+
+.room-stat-indicator {
+  width: 4px;
+  height: 50px;
+  border-radius: 2px;
+  margin-right: 12px;
+}
+
+.indicator-occupied {
+  background-color: #ff9f7a;
+}
+
+.indicator-reserved {
+  background-color: #ffb999;
+}
+
+.indicator-available {
+  background-color: #ffd4bb;
+}
+
+.indicator-not-ready {
+  background-color: #c8f7d8;
+}
+
+.room-stat-label {
+  color: #666;
+  font-size: 16px;
+}
+
+.room-stat-number {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* Reservation Section */
+.reservation-header {
+  display: flex;
+  justify-content: between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.reservation-title {
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+.settings-icon {
+  color: #6c757d;
+  font-size: 20px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.settings-icon:hover {
+  color: #495057;
+}
+
+.chart-container {
+  height: 300px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .room-stat-number {
+    font-size: 20px;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+}
+
+@media (max-width: 576px) {
+  .room-progress-bar {
+    height: 35px;
+  }
+
+  .room-stat-indicator {
+    height: 35px;
+  }
+
+  .room-stat-number {
+    font-size: 18px;
+  }
+
+  .chart-container {
+    height: 200px;
+  }
+}

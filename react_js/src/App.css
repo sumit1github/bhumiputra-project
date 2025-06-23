@@ -1,0 +1,25 @@
+html {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  /* scrollbar-width: none; Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+}
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+.main-layout {
+  display: flex;
+  position: relative;
+}
+
+.main-content {
+  flex: 1;
+  transition: margin-left 0.3s ease;
+}
+
+@media screen and (min-width: 992px) {
+  .main-content.with-sidebar {
+    margin-left: 280px;
+  }
+}
