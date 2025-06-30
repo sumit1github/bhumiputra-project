@@ -106,27 +106,27 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # for neon db only
 tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': str(os.getenv('DBNAME')),
-#        'USER': str(os.getenv('DBUSER')),
-#        'PASSWORD': str(os.getenv('DBPASSWORD')),
-#        'HOST': tmpPostgres.hostname,
-#        'PORT': '5432',
-#    }
-# }
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': tmpPostgres.path.replace('/', ''),
-        'USER': tmpPostgres.username,
-        'PASSWORD': tmpPostgres.password,
-        'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': str(os.getenv('DBNAME')),
+       'USER': str(os.getenv('DBUSER')),
+       'PASSWORD': str(os.getenv('DBPASSWORD')),
+       'HOST': '127.0.0.1',
+       'PORT': '5432',
+   }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': tmpPostgres.path.replace('/', ''),
+#         'USER': tmpPostgres.username,
+#         'PASSWORD': tmpPostgres.password,
+#         'HOST': tmpPostgres.hostname,
+#         'PORT': 5432,
+#     }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

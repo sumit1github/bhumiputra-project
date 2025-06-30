@@ -1,6 +1,6 @@
 from drf_yasg import openapi
 
-from .serializers import UserCreateSerializer
+from .serializers import UserCreateSerializer, InviteUserSerializer, UserDetailUpdateSerializer
 
 
 api_details = {
@@ -57,7 +57,40 @@ api_details = {
         "manual_parameters":[
             openapi.Parameter("pk", openapi.IN_QUERY,required=True, type=openapi.TYPE_STRING, description="Need to pass user:id.",),
         ]
-    }  
+    },
+    "user_invite_post" : {
+        'tag':["User Module"],
+        "url_name": "User Invite",
+        "required_fields" : [],
+        "responses" : {200: 'Success', 400: 'Bad Request'},
+        "description" : "Add User : User List > Add User. Logged-In User with IT role only can add an user.",
+        "request_body" : InviteUserSerializer
+    },
+
+    "user_details_get" : {
+        'tag':["User Module"],
+        "url_name": "User Details",
+        "required_fields" : [],
+        "responses" : {200: 'Success', 400: 'Bad Request'},
+        "description" : "User Details",
+        "manual_parameters":[
+            openapi.Parameter("pk", openapi.IN_QUERY,required=True, type=openapi.TYPE_STRING, description="Need to pass user:id.",),
+        ],
+
+    },
+
+    "user_details_update_post" : {
+        'tag':["User Module"],
+        "url_name": "User update psot",
+        "required_fields" : [],
+        "responses" : {200: 'Success', 400: 'Bad Request'},
+        "description" : "User post",
+        "manual_parameters":[
+            openapi.Parameter("pk", openapi.IN_QUERY,required=True, type=openapi.TYPE_STRING, description="Need to pass user:id.",),
+        ],
+        "request_body" : UserDetailUpdateSerializer
+
+    },
 }
 
 def get_swagger_api_details(function_name):

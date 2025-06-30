@@ -9,10 +9,10 @@ def generate_unique_id(digit):
 
 
 def serilalizer_error_list(serilaizer_error):
-    error_list = []
+    error_list = {}
     for field, errors in serilaizer_error.items():
         for error in errors:
-            error_list.append(f'{field}: {error}')
+            error_list[f"{field}"] = error
     
     return error_list
 

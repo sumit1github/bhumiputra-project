@@ -1,21 +1,41 @@
 import "./App.css";
-import Sidebar from "./common_components/sidebar/Sidebar";
-import Header from "./common_components/header/Header";
-import { IoMdNotifications } from "react-icons/io";
-import { Button } from "react-bootstrap";
-import Dropdown from "react-bootstrap/Dropdown";
+
 import Login from "./Modules/Auth/login/Login";
-import { Route, Routes } from "react-router";
 import Register from "./Modules/Auth/register/Register";
-import Dashboard from "./Modules/IT-Dashboard/Dashboard";
+
+import { Route, Routes } from "react-router";
+import { ToastContainer, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import UserList from "./Modules/User Management/UserList";
+import UserAdd from "./Modules/User Management/UserAdd";
+import UserUpdate from "./Modules/User Management/UserUpdate";
+
 function App() {
   return (
     <>
       <Routes>
-        <Route index element={<Login />} />
-        <Route path="register" element={<Register />} />
-        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="login" element={<Login />} />
+      
+        {/* user management */}
+        <Route path="users" element={<UserList />} />
+        <Route path="users/add" element={<UserAdd />} />
+        <Route path="users/update/:user_id" element={<UserUpdate />} />
+
       </Routes>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
     </>
   );
 }
