@@ -38,7 +38,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('auth_module.urls')),
     path('users/', include('users_module.urls')),
-    path('system/', include('system.urls'))
+    path('system/', include('system.urls')),
+    path('product/', include('product_management.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

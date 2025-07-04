@@ -44,8 +44,22 @@ export const UserDetailsApiCall = () => {
 // user details post request
 export const UserUpdateApiCall = () => {
   return useMutation({
-    mutationFn: async (user_id, user_data) => {
-      const res = await apiClient.post(`/users/detail_update_user/${user_id}`, user_data);
+    mutationFn: async ({ user_id, formData }) => {
+      console.log("User Data:", formData);
+      console.log("User ID:", user_id);
+      const res = await apiClient.post(`/users/detail_update_user/${user_id}`, formData);
+      return res.data;
+    },
+  });
+};
+
+// user search API call
+export const UserSearchApiCall = () => {
+  return useMutation({
+    mutationFn: async ({search_by, query }) => {
+      console.log("Search By:", search_by);
+      console.log("Query:", query);
+      const res = await apiClient.get(`/users/get_user_list?${search_by}=${query}`);
       return res.data;
     },
   });

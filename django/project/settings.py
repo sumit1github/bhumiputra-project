@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     # 'whitenoise.runserver_nostatic',
 
     'auth_module',
-    'users_module'
+    'users_module',
+    'product_management',
 
 ]
 
@@ -169,19 +170,15 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-#cache backend
-REDIS_URL  = os.getenv("REDIS_URL")
+#cache setting for lightweight cache
+# using file based cache
+# for production, you can use redis or memcached
 CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URL,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "CONNECTION_POOL_KWARGS": {"ssl_cert_reqs": None},
-        }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.environ.get('DJANGO_CACHE_LOCATION', '/tmp/django_cache'),
     }
 }
-
 
 # -------------------------------------------- cors settings --------------------------------------
 CORS_ORIGIN_ALLOW_ALL = True
@@ -220,6 +217,7 @@ SWAGGER_SETTINGS = {
 
 # -------------------------------------------- django message framework --------------------------------------
 from django.contrib.messages import constants as messages
+
 MESSAGE_TAGS = {
     messages.INFO: 'alert-info',
     messages.SUCCESS: 'alert-success',

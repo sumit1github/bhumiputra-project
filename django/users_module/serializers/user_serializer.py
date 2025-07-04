@@ -159,7 +159,3 @@ class UserDetailUpdateSerializer(serializers.ModelSerializer):
             'zip_code': {'required': True},
             'contact2': {'required': False},
         }
-
-    def validate(self, data):
-
-        pass

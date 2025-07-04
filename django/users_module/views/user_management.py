@@ -31,13 +31,14 @@ class UserFilter(APIView):
 
         query_dict = {k: v for k, v in request.GET.dict().items() if k != 'page'}
         user_list = uc.user_list_filter(query_dict)
+        print(user_list)
 
-        page, pagemator_meta_data = paginate(
-            request,
-            user_list["user_list"],
-            2
-        )
         if not user_list['error']:
+            page, pagemator_meta_data = paginate(
+                request,
+                user_list['user_list'],
+                20
+            )
             return Response({
                 "status": 200,
                 "user_list": UserListSerializer(page, many=True).data,
@@ -46,7 +47,9 @@ class UserFilter(APIView):
         else:
             return Response({
                 "status": 400,
-                "message": user_list["message"]
+                "error": {
+                    "message": user_list["message"]
+                }
             })
 
     @swagger_auto_schema(**get_swagger_api_details("user_create_post"))
@@ -224,7 +227,12 @@ class UserDetailsUpdateView(APIView):
     @swagger_auto_schema(**get_swagger_api_details("user_details_update_post"))
     def post(self, request, pk):
 
-        serializer = self.serializer_class(data=request.data)
+        user = User.objects.get(id=pk)
+        if user is None:
+            return Response({"status": 400, "error": {
+                "pk": "Primary Key (pk) is required to update user details."
+            }})
+        serializer = self.serializer_class(data=request.data, instance=user, partial=True)
         if serializer.is_valid():
             cleaned_data = serializer.validated_data
 

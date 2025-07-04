@@ -14,10 +14,9 @@ import {
   BiPlusCircle,
   BiSearch,
 } from "react-icons/bi";
-import { FiFilter } from "react-icons/fi";
 import { useNavigate } from "react-router";
 
-import { getUserList } from "./auth_calls";
+import { getUserList, UserSearchApiCall } from "./auth_calls";
 import {TableLayout} from "../../common_components/Table/Table";
 import CustomPagination from "../../common_components/pagination/CustomPagination";
 
@@ -27,7 +26,7 @@ import AdminLayout from "../IT-Dashboard/AdminLayout";
 const UserList = () => {
   const navigate = useNavigate();
   const [userLIst, setUserLIst] = useState([]);
-  const [showFilters, setShowFilters] = useState(false);
+  const [reload_page, setReloadPage] = useState(0); // State to trigger reload of user list
 
   //----------------------------- pagination ----------------------------------
   const [paginationMeta, setPaginationMeta] = useState({});
@@ -42,7 +41,7 @@ const UserList = () => {
   // Load user list when component mounts or when page changes
   React.useEffect(() => {
     loadUserList(currentPage);
-  }, [currentPage]);
+  }, [currentPage, reload_page ]);
 
   React.useEffect(() => {
     if (data) {
@@ -54,40 +53,103 @@ const UserList = () => {
   }, [data]);
 
 
+  // ------------------for user search-------------------
+  const {
+    mutate: UserSearchAPI,
+    data: UserSearchdata,
+    isLoading: UserSearchisLoading,
+    isError: UserSearchisError,
+    error: UserSearcherror
+  } = UserSearchApiCall();
+
+  const [searchTerm, setSearchTerm] = useState({
+    "search_by": "id",
+    "query": null
+    
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setSearchTerm({
+      ...searchTerm,
+      [name]: value
+    });
+    if (value === "all") {
+      setReloadPage(prev => prev + 1);
+      setSearchTerm({
+        ...searchTerm,
+        query: null
+      });
+    }
+  };
+
+  const handleSearch = () => {``
+    if (searchTerm.query) {
+      UserSearchAPI({
+        search_by: searchTerm.search_by,
+        query: searchTerm.query
+      });
+    }
+  };
+
+  React.useEffect(() => {
+    if (UserSearchdata) {
+      setUserLIst(UserSearchdata.user_list || []);
+      if (UserSearchdata.pagination_meta_data) {
+        setPaginationMeta(UserSearchdata.pagination_meta_data);
+      }
+    }
+  }, [UserSearchdata]);
+
   return (
     <AdminLayout>
       <div className="userLIst-container">
         <Container fluid>
           <h3 className="p-2 pl-0">All User List</h3>
           {/* Controls Card */}
-          <Card className="controls-card mb-4">
-            <Card.Body>
-              <Row className="align-items-center">
-                <Col lg={6} md={12}>
-                  <div className="d-flex align-items-center gap-3 flex-wrap ">
+                <Card className="controls-card mb-4">
+                <Card.Body>
+                  <Row className="align-items-center">
+                  <Col lg={8} md={12}>
+                    <div className="d-flex align-items-center gap-3 flex-wrap">
+                    <Form.Select 
+                      style={{ width: '150px' }}
+                      name="search_by"
+                      onChange={(e) => handleChange(e)}
+                    >
+                      <option value="id">ID</option>
+                      <option value="full_name">Full Name</option>
+                      <option value="email">Email</option>
+                      <option value="contact1">Contact</option>
+                      <option value="all">NO-Filter</option>
+                    </Form.Select>
+
                     <InputGroup className="search-input">
                       <InputGroup.Text>
-                        <BiSearch size={16} />
+                      <BiSearch size={16} />
                       </InputGroup.Text>
                       <Form.Control
-                        type="text"
-                        placeholder="Search userLIst..."
+                      type="text"
+                      placeholder="Full Name, Email or Contact"
+                      value={searchTerm.query || ""}
+                      onChange={(e) => handleChange(e)}
+                      name="query"
+                      autoComplete="off"
+                      className="search-input-field"
+                      title="Search by Full Name, Email or Contact"
                       />
+                      <Button 
+                      variant="primary"
+                      onClick={handleSearch}
+                      >
+                      Search
+                      </Button>
                     </InputGroup>
-                  </div>
-                </Col>
+                    </div>
+                  </Col>
 
-                <Col lg={6} md={12}>
-                  <div className="d-flex justify-content-end gap-2 flex-wrap">
-                    <Button
-                      variant="outline-secondary"
-                      size="sm"
-                      onClick={() => setShowFilters(!showFilters)}
-                      className="action-btn"
-                      title="Toggle Filters"
-                    >
-                      <FiFilter size={16} />
-                    </Button>
+                  <Col lg={4} md={12}>
+                    <div className="d-flex justify-content-end gap-2 flex-wrap">
 
                     <Button
                       variant="outline-secondary"
@@ -98,13 +160,13 @@ const UserList = () => {
                     >
                       <BiPlusCircle size={16} />
                     </Button>
-                  </div>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
+                    </div>
+                  </Col>
+                  </Row>
+                </Card.Body>
+                </Card>
 
-          {/* Table Card */}
+                {/* Table Card */}
           <Card className="table-card">
             <Card.Body className="p-2">
               <div className="table-responsive">

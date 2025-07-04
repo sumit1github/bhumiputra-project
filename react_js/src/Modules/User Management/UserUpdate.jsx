@@ -18,7 +18,7 @@ const UserUpdate = () => {
   ];
 
   const [formErrors, setFormErrors] = useState({});
-  console.log("User ID:", formErrors);
+
   const [formData, setFormData] = useState({
     "full_name": "",
     "email": "",
@@ -89,8 +89,8 @@ const UserUpdate = () => {
   
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    UserUpdateAPI(user_id, formData, {
+
+    UserUpdateAPI({"user_id": user_id ,"formData":formData}, {
       onSuccess: (data) => {
         if (data?.status === 200) {
           setFormErrors({});

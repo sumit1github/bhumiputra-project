@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import UserList from "./Modules/User Management/UserList";
 import UserAdd from "./Modules/User Management/UserAdd";
 import UserUpdate from "./Modules/User Management/UserUpdate";
+import { ProductList } from "./Modules/ProductManagement/ProductList";
 
 function App() {
   return (
@@ -20,6 +21,10 @@ function App() {
         <Route path="users" element={<UserList />} />
         <Route path="users/add" element={<UserAdd />} />
         <Route path="users/update/:user_id" element={<UserUpdate />} />
+
+        {/* user management */}
+        <Route path="products/list" element={<ProductList />} />
+        
 
       </Routes>
 
