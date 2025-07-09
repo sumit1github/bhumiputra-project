@@ -14,17 +14,21 @@ import {
 import { IoMdNotifications } from "react-icons/io";
 
 import "./AdminLayout.css";
+import { useSelector } from 'react-redux';
+
+
 
 const AdminLayout = ({ children }) => {
-  
+
+  const userData = useSelector((state) => state.user);
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
     <div className="main-layout">
       <div
-        className={`sidebar-absolute-wrapper border   ${
-          sidebarOpen ? "sidebar-open" : "sidebar-closed"
-        }`}
+        className={`sidebar-absolute-wrapper border   ${sidebarOpen ? "sidebar-open" : "sidebar-closed"
+          }`}
       >
         <div
           className="sidebar-toggle-button border "
@@ -44,20 +48,19 @@ const AdminLayout = ({ children }) => {
                 className="person-image-2 border"
               />
               <div>
-                <div className="text-muted text-center">Admin</div>
-                <div className="text-muted text-sm ">test@example.com</div>
+                <div className="text-muted text-center">{userData?.user?.full_name}</div>
+                <div className="text-muted text-sm ">{userData?.user?.email}</div>
               </div>
               <div className="d-flex gap-4 align-items-center p-3">
-                <CgProfile size={24} />
-                <FaRegEdit size={24} />
-                <SiTicktick size={24} />
-                <MdExitToApp size={26} />
+                <CgProfile size={24} title="Profile" />
+                <FaRegEdit size={24} title="Edit Profile" />
+                <MdExitToApp size={26} title="Logout" />
               </div>
               <hr className="border-b" />
               <ul className="nav nav-pills  flex-column mb-auto">
 
                 {/* Dash-board */}
-                <li  className="nav-item">
+                <li className="nav-item">
                   <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated`}>
                     <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
                       <MdDashboard />
@@ -69,12 +72,24 @@ const AdminLayout = ({ children }) => {
                 </li>
 
                 {/* Users */}
-                <li  className="nav-item">
+                <li className="nav-item">
                   <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated`}>
                     <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
                       <MdDashboard />
                       <Link to={"/users"} className="text-decoration-none text-dark">
                         <span>User Management</span>
+                      </Link>
+                    </div>
+                  </div>
+                </li>
+
+                {/* Products */}
+                <li className="nav-item">
+                  <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated`}>
+                    <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
+                      <MdDashboard />
+                      <Link to={"/products/list"} className="text-decoration-none text-dark">
+                        <span>Products</span>
                       </Link>
                     </div>
                   </div>
@@ -87,10 +102,9 @@ const AdminLayout = ({ children }) => {
       </div>
 
       <div
-        className={`main-content fixed-top ${
-          sidebarOpen ? "with-sidebar" : ""
-        }`}
-        >
+        className={`main-content fixed-top ${sidebarOpen ? "with-sidebar" : ""
+          }`}
+      >
         <div className="border header d-flex align-items-center  justify-content-end ">
           <IoMdNotifications size={20} />
 
@@ -120,7 +134,7 @@ const AdminLayout = ({ children }) => {
             window.innerWidth < 776 && setSidebarOpen(false);
           }}
         >
-          
+
           {children}
         </div>
       </div>

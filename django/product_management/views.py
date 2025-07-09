@@ -67,7 +67,7 @@ class productCreateDetailUpdateDelete(APIView):
         
     @swagger_auto_schema(**get_swagger_api_details("product_update_patch"))
     def patch(self, request):
-        product_id = request.data.get('pid')
+        product_id = request.GET.get('pid')
         if not product_id:
             return Response({
                 "status": 400,

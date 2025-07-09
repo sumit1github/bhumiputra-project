@@ -46,7 +46,7 @@ const UserUpdate = () => {
 
   useEffect(() => {
     console.log("User Details:", user_detaildata);
-    if (user_detaildata) { 
+    if (user_detaildata) {
 
       // Ensure age is a number and handle potential null/undefined values
       const sanitizedData = {
@@ -60,9 +60,9 @@ const UserUpdate = () => {
         address: user_detaildata.user.address?.trim() || "",
         zip_code: user_detaildata.user.zip_code?.trim() || ""
       };
-        console.log("User Details:", sanitizedData);
+      console.log("User Details:", sanitizedData);
       setFormData(sanitizedData);
-      
+
     }
   }, [user_detaildata]);
 
@@ -86,11 +86,11 @@ const UserUpdate = () => {
   };
 
   // Custom hook for user invite
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    UserUpdateAPI({"user_id": user_id ,"formData":formData}, {
+    UserUpdateAPI({ "user_id": user_id, "formData": formData }, {
       onSuccess: (data) => {
         if (data?.status === 200) {
           setFormErrors({});
@@ -102,7 +102,7 @@ const UserUpdate = () => {
           setFormErrors(data.error); // field-level errors
         }
       },
-  
+
       onError: (err) => {
         if (err?.response?.data?.error) {
           setFormErrors(err.response.data.error);
@@ -124,7 +124,7 @@ const UserUpdate = () => {
             <h4 className="mb-0 py-2">📝 User Update Form</h4>
           </div>
           <div className="card-body p-4">
-            
+
             <form onSubmit={handleSubmit}>
               <div className="row g-4">
 

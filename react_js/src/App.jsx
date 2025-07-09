@@ -10,6 +10,7 @@ import UserList from "./Modules/User Management/UserList";
 import UserAdd from "./Modules/User Management/UserAdd";
 import UserUpdate from "./Modules/User Management/UserUpdate";
 import { ProductList } from "./Modules/ProductManagement/ProductList";
+import { ProductUpdate } from "./Modules/ProductManagement/ProductUpdate";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
 
         {/* user management */}
         <Route path="products/list" element={<ProductList />} />
+        <Route path="products/update/:product_id" element={<ProductUpdate />} />
         
 
       </Routes>

@@ -3,14 +3,14 @@ import { useNavigate } from "react-router";
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from "../../../store/Slices/Room/UserSlice";
 import "./login.css";
-import {useLogin} from "../auth_calls"; // Assuming you have a custom hook for login
+import { useLogin } from "../auth_calls"; // Assuming you have a custom hook for login
 
 const Login = () => {
   const dispatch = useDispatch();
   const { mutate: login, isLoading, isError, error } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -31,7 +31,7 @@ const Login = () => {
       onSuccess: (data) => {
         console.log("Login successful:", data);
         dispatch(loginSuccess(data));
-        navigate("/dashboard");
+        navigate("/users");
       },
     });
   };
@@ -93,9 +93,8 @@ const Login = () => {
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         <i
-                          className={`fas ${
-                            showPassword ? "fa-eye-slash" : "fa-eye"
-                          }`}
+                          className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"
+                            }`}
                         ></i>
                       </div>
                     </div>
@@ -103,7 +102,7 @@ const Login = () => {
 
                   {/* Login Button */}
                   <button
-                    onClick={(e) => {handleLogin();}}
+                    onClick={(e) => { handleLogin(); }}
                     className="login-btn"
                   >
                     Login

@@ -27,7 +27,31 @@ export const productCreate = () => {
       const res = await apiClient.post("/product/product_create_update_delete_detail", productData);
       return res.data;
     },
-    
+
+  });
+};
+
+
+// product details page API call
+export const productDetailsApiCall = () => {
+  return useMutation({
+    mutationFn: async (product_id) => {
+      const res = await apiClient.get(`/product/product_create_update_delete_detail?pid=${product_id}`);
+      return res.data;
+    },
+
+  });
+};
+
+
+// create update product
+export const productUpdate = () => {
+  return useMutation({
+    mutationFn: async ({ product_id, productData }) => {
+      const res = await apiClient.patch(`/product/product_create_update_delete_detail?pid=${product_id}`, productData);
+      return res.data;
+    },
+
   });
 };
 

@@ -17,7 +17,7 @@ import {
 import { useNavigate } from "react-router";
 
 import { getUserList, UserSearchApiCall } from "./auth_calls";
-import {TableLayout} from "../../common_components/Table/Table";
+import { TableLayout } from "../../common_components/Table/Table";
 import CustomPagination from "../../common_components/pagination/CustomPagination";
 
 import "./UserList.css";
@@ -41,7 +41,7 @@ const UserList = () => {
   // Load user list when component mounts or when page changes
   React.useEffect(() => {
     loadUserList(currentPage);
-  }, [currentPage, reload_page ]);
+  }, [currentPage, reload_page]);
 
   React.useEffect(() => {
     if (data) {
@@ -65,7 +65,7 @@ const UserList = () => {
   const [searchTerm, setSearchTerm] = useState({
     "search_by": "id",
     "query": null
-    
+
   });
 
   const handleChange = (e) => {
@@ -83,7 +83,8 @@ const UserList = () => {
     }
   };
 
-  const handleSearch = () => {``
+  const handleSearch = () => {
+    ``
     if (searchTerm.query) {
       UserSearchAPI({
         search_by: searchTerm.search_by,
@@ -107,12 +108,12 @@ const UserList = () => {
         <Container fluid>
           <h3 className="p-2 pl-0">All User List</h3>
           {/* Controls Card */}
-                <Card className="controls-card mb-4">
-                <Card.Body>
-                  <Row className="align-items-center">
-                  <Col lg={8} md={12}>
-                    <div className="d-flex align-items-center gap-3 flex-wrap">
-                    <Form.Select 
+          <Card className="controls-card mb-4">
+            <Card.Body>
+              <Row className="align-items-center">
+                <Col lg={8} md={12}>
+                  <div className="d-flex align-items-center gap-3 flex-wrap">
+                    <Form.Select
                       style={{ width: '150px' }}
                       name="search_by"
                       onChange={(e) => handleChange(e)}
@@ -126,30 +127,30 @@ const UserList = () => {
 
                     <InputGroup className="search-input">
                       <InputGroup.Text>
-                      <BiSearch size={16} />
+                        <BiSearch size={16} />
                       </InputGroup.Text>
                       <Form.Control
-                      type="text"
-                      placeholder="Full Name, Email or Contact"
-                      value={searchTerm.query || ""}
-                      onChange={(e) => handleChange(e)}
-                      name="query"
-                      autoComplete="off"
-                      className="search-input-field"
-                      title="Search by Full Name, Email or Contact"
+                        type="text"
+                        placeholder="Full Name, Email or Contact"
+                        value={searchTerm.query || ""}
+                        onChange={(e) => handleChange(e)}
+                        name="query"
+                        autoComplete="off"
+                        className="search-input-field"
+                        title="Search by Full Name, Email or Contact"
                       />
-                      <Button 
-                      variant="primary"
-                      onClick={handleSearch}
+                      <Button
+                        variant="primary"
+                        onClick={handleSearch}
                       >
-                      Search
+                        Search
                       </Button>
                     </InputGroup>
-                    </div>
-                  </Col>
+                  </div>
+                </Col>
 
-                  <Col lg={4} md={12}>
-                    <div className="d-flex justify-content-end gap-2 flex-wrap">
+                <Col lg={4} md={12}>
+                  <div className="d-flex justify-content-end gap-2 flex-wrap">
 
                     <Button
                       variant="outline-secondary"
@@ -160,24 +161,24 @@ const UserList = () => {
                     >
                       <BiPlusCircle size={16} />
                     </Button>
-                    </div>
-                  </Col>
-                  </Row>
-                </Card.Body>
-                </Card>
+                  </div>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
 
-                {/* Table Card */}
+          {/* Table Card */}
           <Card className="table-card">
             <Card.Body className="p-2">
               <div className="table-responsive">
-                <TableLayout 
-                  is_loading={isLoading} 
-                  columns={["ID", "Full Name", "Email", "contact1", "J-Level","A-Level","wallet_balance", "Actions"]} 
-                  data={data} 
-                  is_error={isError} 
+                <TableLayout
+                  is_loading={isLoading}
+                  columns={["ID", "Full Name", "Email", "contact1", "J-Level", "A-Level", "wallet_balance", "Actions"]}
+                  data={data}
+                  is_error={isError}
                   error={error}
                 >
-                  {userLIst.map((data) => 
+                  {userLIst.map((data) =>
                     <tr key={data.id}>
                       <td>{data.id}</td>
                       <td>{data.full_name}</td>
@@ -187,16 +188,16 @@ const UserList = () => {
                       <td>{data.achiver_level}</td>
                       <td>{data.wallet_balance}</td>
                       <td>
-                        <FaEdit onClick={()=>navigate(`/users/update/${data.id}`)}/>
+                        <FaEdit onClick={() => navigate(`/users/update/${data.id}`)} />
                       </td>
                     </tr>
                   )}
                 </TableLayout>
 
                 {/* pagination */}
-                
+
                 <CustomPagination
-                  metadata={paginationMeta} 
+                  metadata={paginationMeta}
                   onPageChange={handlePageChange}
                 />
               </div>
