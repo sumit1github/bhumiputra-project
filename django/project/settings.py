@@ -99,6 +99,7 @@ REST_FRAMEWORK = {
 }
 
 WSGI_APPLICATION = 'project.wsgi.application'
+ASGI_APPLICATION = 'project.asgi.application'
 
 
 # Database

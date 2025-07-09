@@ -1,0 +1,45 @@
+- name: Clean and configure Nginx
+  hosts: droplets
+  become: true
+
+  tasks:
+    - name: Remove default Nginx config from sites-available
+      file:
+        path: /etc/nginx/sites-available/default
+        state: absent
+
+    - name: Remove default Nginx config from sites-enabled
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Remove existing project config symlink from sites-enabled
+      file:
+        path: /etc/nginx/sites-enabled/project
+        state: absent
+
+    # Now continue with your normal steps...
+    - name: Copy Nginx config
+      copy:
+        src: nginx/project
+        dest: /etc/nginx/sites-available/project
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Link Nginx config to sites-enabled
+      file:
+        src: /etc/nginx/sites-available/project
+        dest: /etc/nginx/sites-enabled/project
+        state: link
+        force: true
+
+    - name: Test Nginx configuration
+      command: nginx -t
+      register: nginx_test
+      failed_when: "'test is successful' not in nginx_test.stderr"
+
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded

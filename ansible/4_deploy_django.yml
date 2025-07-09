@@ -1,0 +1,26 @@
+---
+- name: Deploy Django Supervisor configuration
+  hosts: droplets
+  become: true
+
+  vars:
+    local_supervisor_conf: supervisor/django.conf
+    remote_supervisor_conf: /etc/supervisor/conf.d/django.conf
+
+  tasks:
+    - name: Copy django.conf to supervisor conf directory
+      copy:
+        src: "{{ local_supervisor_conf }}"
+        dest: "{{ remote_supervisor_conf }}"
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reread Supervisor config
+      command: supervisorctl reread
+
+    - name: Update Supervisor to pick new config
+      command: supervisorctl update
+
+    - name: Restart Django via Supervisor
+      command: supervisorctl restart django
