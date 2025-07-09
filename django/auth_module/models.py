@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 
 from .manager import MyAccountManager
+from .constants import GENDER_CHOICES
 
 class User(AbstractBaseUser, PermissionsMixin):
     full_name = models.CharField(max_length=255, null= True, blank= True)
@@ -21,8 +22,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    # details
+    age = models.IntegerField(null=True, blank=True)
+    dob = models.DateField(null=True, blank=True)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    zip_code = models.CharField(max_length=20, null=True, blank=True)
+
+    # meta data
+    joining_level = models.PositiveBigIntegerField(null=True, blank=True)
+    achiver_level = models.PositiveBigIntegerField(null=True, blank=True)
+
+    # wallet
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children' )
+    wallet_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=True, blank=True)
+
     USERNAME_FIELD = "email"	
     REQUIRED_FIELDS = ["password","contact1"]
+    
 
     objects = MyAccountManager()
     

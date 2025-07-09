@@ -18,45 +18,6 @@ from . import serilaizer as common_serializer
 from utils import serilalizer_error_list
 from . import swagger_doc
 
-class SignupApi(APIView):
-
-    serializer_class= common_serializer.SignupSerializer
-    model= common_model.User
-    swagger_doc_item = swagger_doc.sign_up_post
-
-    @swagger_auto_schema(
-        tags=swagger_doc_item['tag'],
-        operation_id=swagger_doc_item['url_name'],
-        operation_description=swagger_doc_item['description'],
-        request_body=openapi.Schema(
-            
-            required=swagger_doc_item['required_fields'],
-            type=openapi.TYPE_OBJECT,
-            properties = swagger_doc_item['fields'],
-        ),
-        responses=swagger_doc_item['responses'],
-        
-    )
-    def post(self, request):
-        serializer = self.serializer_class(data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(
-            {
-                "status":200,
-                "message":"Your account is created, Please login..",
-            }
-            )
-        else:
-            error_list = serilalizer_error_list(serializer.errors)
-            return Response(
-                {
-                    "status":200,
-                    "error": error_list,
-                }
-            )
-        
-
 class Login(APIView):
 
     model= common_model.User
@@ -85,6 +46,7 @@ class Login(APIView):
 
     def post(self, request):
         resp ={}
+        user = None
         serilizer = self.serializer_class(data =request.data)
         if serilizer.is_valid():
             email = serilizer.validated_data.get('email')
@@ -97,6 +59,9 @@ class Login(APIView):
 
                 user = None
                 return Response({"status":400,"error":["Login Failed..",]})
+
+        else:
+            return Response({"status":400,"error":serilizer.errors})
 
         if user.check_password(password):
             pass  # Credentials are valid

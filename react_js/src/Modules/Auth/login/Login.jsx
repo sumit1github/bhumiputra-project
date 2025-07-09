@@ -1,16 +1,19 @@
 import React, { useState } from "react";
-import { FaApple } from "react-icons/fa";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import { useDispatch } from 'react-redux';
+import { loginSuccess } from "../../../store/Slices/Room/UserSlice";
+import "./login.css";
+import { useLogin } from "../auth_calls"; // Assuming you have a custom hook for login
 
-import "./Login.css";
 const Login = () => {
+  const dispatch = useDispatch();
+  const { mutate: login, isLoading, isError, error } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
-  const [activeTab, setActiveTab] = useState("admin");
   const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    username: "admin",
+    email: "",
     password: "",
-    rememberMe: false,
   });
 
   const handleInputChange = (e) => {
@@ -21,8 +24,16 @@ const Login = () => {
     }));
   };
 
-  const handleLogin = () => {
-    navigate("/dashboard");
+  const handleLogin = async (e) => {
+
+    console.log("Login attempted:", formData);
+    login(formData, {
+      onSuccess: (data) => {
+        console.log("Login successful:", data);
+        dispatch(loginSuccess(data));
+        navigate("/users");
+      },
+    });
   };
 
   return (
@@ -39,27 +50,7 @@ const Login = () => {
             <div className="form-container">
               {/* Header */}
               <div className="text-center">
-                <h1 className="welcome-title">Welcome to Luxuria!</h1>
-
-                {/* Tab Buttons */}
-                <div className="tab-buttons">
-                  <button
-                    onClick={() => setActiveTab("admin")}
-                    className={`tab-btn admin ${
-                      activeTab === "admin" ? "active" : ""
-                    }`}
-                  >
-                    Admin
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("employee")}
-                    className={`tab-btn employee ${
-                      activeTab === "employee" ? "active" : ""
-                    }`}
-                  >
-                    Employee
-                  </button>
-                </div>
+                <h1 className="welcome-title">Welcome to Bhumiputra!</h1>
               </div>
 
               {/* Sign In Form */}
@@ -72,12 +63,12 @@ const Login = () => {
                     {/* <div className="form-label">username: {activeTab}*</div> */}
                     <div className="input-group">
                       <input
-                        type="text"
-                        name="username"
-                        value={formData.username}
+                        type="email"
+                        name="email"
+                        value={formData.email}
                         onChange={handleInputChange}
                         className="form-control-custom"
-                        placeholder="Enter username"
+                        placeholder="Enter Email"
                       />
                       <div className="help-icon">
                         <span>?</span>
@@ -102,60 +93,20 @@ const Login = () => {
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         <i
-                          className={`fas ${
-                            showPassword ? "fa-eye-slash" : "fa-eye"
-                          }`}
+                          className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"
+                            }`}
                         ></i>
                       </div>
                     </div>
                   </div>
 
-                  {/* Remember Me & Forgot Password */}
-                  <div className="form-check-row">
-                    <div className="form-check-custom">
-                      <input
-                        type="checkbox"
-                        name="rememberMe"
-                        checked={formData.rememberMe}
-                        onChange={handleInputChange}
-                        className="form-check-input"
-                        id="rememberMe"
-                      />
-                      <label className="form-check-label" htmlFor="rememberMe">
-                        Remember Me
-                      </label>
-                    </div>
-                    <Link className="forgot-password">Forgot Password?</Link>
-                  </div>
-
                   {/* Login Button */}
                   <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      console.log("Login attempted:", formData);
-                      handleLogin();
-                    }}
+                    onClick={(e) => { handleLogin(); }}
                     className="login-btn"
                   >
                     Login
                   </button>
-                </div>
-
-                {/* Social Login */}
-                <div className="social-login">
-                  <button className="social-btn google-btn">G</button>
-                  <button className="social-btn apple-btn">
-                    <FaApple />
-                  </button>
-                  <button className="social-btn facebook-btn">f</button>
-                </div>
-
-                {/* Sign Up Link */}
-                <div className="signup-link">
-                  <span>Don't have an account? </span>
-                  <Link className="signup-btn text-underline" to={"/register"}>
-                    Click here to create one
-                  </Link>
                 </div>
               </div>
             </div>

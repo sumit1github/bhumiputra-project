@@ -10,3 +10,9 @@ role_list = [
     "LAB TECHNICIAN",
     "ACCOUNTANT",
 ]
+
+GENDER_CHOICES = (
+   ( "MALE","MALE"),
+    ("FEMALE","FEMALE"),
+    ("OTHER","OTHER"),
+)

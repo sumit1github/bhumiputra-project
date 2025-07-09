@@ -1,4 +1,4 @@
-from .custom_pagination import CustomPagination
+from .custom_pagination import paginate
 from .helpers import (
     generate_unique_id, 
     serilalizer_error_list, 
@@ -6,7 +6,7 @@ from .helpers import (
 )
 
 __all__ = [
-    'CustomPagination',
+    'paginate',
     'generate_unique_id', 
     'serilalizer_error_list',
     'get_all_roles',

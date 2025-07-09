@@ -4,46 +4,6 @@ from django.contrib.auth.hashers import make_password
 
 from . import models
 
-class SignupSerializer(serializers.ModelSerializer):
-
-    confirm_password = serializers.CharField(
-        max_length=100,
-        required=True,
-        allow_blank=False,
-        trim_whitespace=True,
-        help_text="Confirm Password."
-    )
-
-    class Meta:
-        model = models.User
-        fields = [
-            'full_name',
-            'email',
-            'contact',
-            'password',
-
-        ]
-
-        extra_kwargs = {
-            'full_name': {'required': True},
-            'email': {'required': True},
-            'contact': {'required': True},
-            'password': {'required': True},
-        }
-
-        def validate(self, data):
-            password = data.get('password')
-            password2 = data.get('confirm_password')
-
-            if password != password2:
-                raise ValidationError("Passwords do not match.")
-            
-            data['password'] = make_password(password2)
-
-            return data
-        
-
-    
 class LoginSerializer(serializers.Serializer):
 
     email = serializers.EmailField(
@@ -75,7 +35,8 @@ class UserSerializer(serializers.ModelSerializer):
             "is_staff",
             "is_active",
             "is_superuser",
-            "roles"
+            "roles",
+            "full_name"
         ]
 
 

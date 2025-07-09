@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     # 'whitenoise.runserver_nostatic',
 
     'auth_module',
-    'users_module'
+    'users_module',
+    'product_management',
 
 ]
 
@@ -106,27 +107,27 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # for neon db only
 tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': str(os.getenv('DBNAME')),
-#        'USER': str(os.getenv('DBUSER')),
-#        'PASSWORD': str(os.getenv('DBPASSWORD')),
-#        'HOST': tmpPostgres.hostname,
-#        'PORT': '5432',
-#    }
-# }
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': tmpPostgres.path.replace('/', ''),
-        'USER': tmpPostgres.username,
-        'PASSWORD': tmpPostgres.password,
-        'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql',
+       'NAME': str(os.getenv('DBNAME')),
+       'USER': str(os.getenv('DBUSER')),
+       'PASSWORD': str(os.getenv('DBPASSWORD')),
+       'HOST': '127.0.0.1',
+       'PORT': '5432',
+   }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': tmpPostgres.path.replace('/', ''),
+#         'USER': tmpPostgres.username,
+#         'PASSWORD': tmpPostgres.password,
+#         'HOST': tmpPostgres.hostname,
+#         'PORT': 5432,
+#     }
+# }
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -169,19 +170,15 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-#cache backend
-REDIS_URL  = os.getenv("REDIS_URL")
+#cache setting for lightweight cache
+# using file based cache
+# for production, you can use redis or memcached
 CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": REDIS_URL,
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "CONNECTION_POOL_KWARGS": {"ssl_cert_reqs": None},
-        }
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.environ.get('DJANGO_CACHE_LOCATION', '/tmp/django_cache'),
     }
 }
-
 
 # -------------------------------------------- cors settings --------------------------------------
 CORS_ORIGIN_ALLOW_ALL = True
@@ -220,6 +217,7 @@ SWAGGER_SETTINGS = {
 
 # -------------------------------------------- django message framework --------------------------------------
 from django.contrib.messages import constants as messages
+
 MESSAGE_TAGS = {
     messages.INFO: 'alert-info',
     messages.SUCCESS: 'alert-success',

@@ -1,0 +1,56 @@
+
+- name: Initial server setup for Django app with all dependencies
+  hosts: droplets
+  become: true
+
+  tasks:
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+        autoremove: yes
+        autoclean: yes
+
+    - name: Install base packages
+      apt:
+        name:
+          - git
+          - python3
+          - python3-pip
+          - python3-venv
+          - postgresql
+          - postgresql-contrib
+          - nginx
+        state: present
+        update_cache: yes
+
+    - name: Install development dependencies
+      apt:
+        name:
+          - gcc
+          - libpq-dev
+          - python3-dev
+          - build-essential
+        state: present
+
+    - name: Install curl (required for Node.js setup)
+      apt:
+        name: curl
+        state: present
+
+    - name: Add Node.js 20.x setup script
+      shell: curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Final apt update
+      apt:
+        update_cache: yes

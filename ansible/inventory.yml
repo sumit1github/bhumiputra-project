@@ -1,0 +1,6 @@
+all:
+  hosts:
+    droplets:
+      ansible_host: "{{ lookup('env', 'SERVER_IP') }}"
+      ansible_user: "{{ lookup('env', 'SERVER_USERNAME') }}"
+      ansible_ssh_pass: "{{ lookup('env', 'SERVER_PASS') }}"
