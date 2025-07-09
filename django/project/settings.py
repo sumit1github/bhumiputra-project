@@ -96,7 +96,8 @@ REST_FRAMEWORK = {
     },
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',  # require login for all APIs
-    ]
+    ],
+    'EXCEPTION_HANDLER': 'common.exception_handler.custom_exception_handler'
 }
 
 WSGI_APPLICATION = 'project.wsgi.application'
