@@ -1,0 +1,72 @@
+---
+- name: Install and configure PostgreSQL
+  hosts: droplets
+  become: true
+
+  vars:
+    db_name: "{{ lookup('env', 'DB_NAME') }}"
+    db_user: "{{ lookup('env', 'DB_USER') }}"
+    db_password: "{{ lookup('env', 'DB_PASSWORD') }}"
+
+  tasks:
+    - name: Check if PostgreSQL is already installed
+      command: which psql
+      register: psql_check
+      ignore_errors: true
+
+    - name: Install PostgreSQL and dependencies if not installed
+      apt:
+        name:
+          - postgresql
+          - postgresql-contrib
+        state: present
+        update_cache: yes
+      when: psql_check.rc != 0
+
+    - name: Install psycopg2 and dev packages for Ansible PostgreSQL modules
+      apt:
+        name:
+          - python3-psycopg2
+          - libpq-dev
+          - python3-dev
+          - build-essential
+        state: present
+        update_cache: yes
+
+    - name: Print install message
+      debug:
+        msg: "--------------------------------DONE Install POSTGRES--------------------------"
+
+    - name: Create PostgreSQL database
+      become_user: postgres
+      postgresql_db:
+        name: "{{ db_name }}"
+        state: present
+
+    - name: Print DB creation message
+      debug:
+        msg: "--------------------------------Creating Database Done--------------------------"
+
+    - name: Set PostgreSQL user password
+      become_user: postgres
+      postgresql_user:
+        name: "{{ db_user }}"
+        password: "{{ db_password }}"
+        role_attr_flags: "LOGIN"
+
+    - name: Print password change message
+      debug:
+        msg: "--------------------------------Done User's Password --------------------------"
+
+    - name: Grant all privileges on database to user
+      become_user: postgres
+      postgresql_privs:
+        db: "{{ db_name }}"
+        role: "{{ db_user }}"
+        type: database
+        privs: ALL
+        state: present
+
+    - name: Print permission grant message
+      debug:
+        msg: "--------------------------------Done Granting All permission to user --------------------------"
