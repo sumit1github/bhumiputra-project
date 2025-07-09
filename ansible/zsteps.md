@@ -70,6 +70,10 @@ echo $SERVER_PASS
 
 ``` ansible-playbook -i inventory.yml 3_reactjs_build_transfer.yml ```
 
+### deploy django using asgi
+
+``` ansible-playbook -i inventory.yml 4_deploy_django.yml ```
+
 ### copy nginx setup
 
-``` ansible-playbook -i inventory.yml 4_nginx.yml ```
+``` ansible-playbook -i inventory.yml 5_nginx.yml ```
