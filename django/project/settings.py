@@ -57,6 +57,7 @@ MIDDLEWARE = [
 
     'corsheaders.middleware.CorsMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    'common.middleware.custom_exception_handler.GlobalExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
