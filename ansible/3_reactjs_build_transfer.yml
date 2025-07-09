@@ -1,0 +1,24 @@
+---
+- name: Copy React dist build to Nginx public directory
+  hosts: droplets
+  become: true
+
+  vars:
+    react_build_source: /root/app/react_js/dist
+    react_build_dest: /var/www/myapp
+
+  tasks:
+    - name: Ensure /var/www/myapp directory exists
+      file:
+        path: "{{ react_build_dest }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy React build files
+      copy:
+        src: "{{ react_build_source }}/"
+        dest: "{{ react_build_dest }}/"
+        owner: www-data
+        group: www-data
+        mode: '0755'
+        remote_src: true

@@ -65,3 +65,11 @@ echo $SERVER_PASS
 ### git setup and code pull for first time
 
 ``` ansible-playbook -i inventory.yml 3_codepull.yml ```
+
+### copy build files of react to /var/www/myapp
+
+``` ansible-playbook -i inventory.yml 3_reactjs_build_transfer.yml ```
+
+### copy nginx setup
+
+``` ansible-playbook -i inventory.yml 4_nginx.yml ```
