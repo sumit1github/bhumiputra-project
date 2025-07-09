@@ -1,0 +1,32 @@
+---
+- name: Deploy and run new_code_deploy.sh on remote server
+  hosts: droplets
+  become: true
+  vars:
+    remote_user_home: "{{ lookup('env', 'REMOTE_USER_HOME') }}"
+    local_script: scripts/new_code_deploy.sh
+    remote_script_path: "{{ remote_user_home }}/scripts/new_code_deploy.sh"
+
+  tasks:
+    - name: Ensure remote scripts directory exists
+      file:
+        path: "{{ remote_user_home }}/scripts"
+        state: directory
+        mode: '0755'
+
+    - name: Copy new_code_deploy.sh to remote server
+      copy:
+        src: "{{ local_script }}"
+        dest: "{{ remote_script_path }}"
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Make sure script is executable
+      file:
+        path: "{{ remote_script_path }}"
+        mode: '0755'
+        state: file
+
+    - name: Run the deployment script
+      command: "{{ remote_script_path }}"

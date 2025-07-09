@@ -77,3 +77,7 @@ echo $SERVER_PASS
 ### copy nginx setup
 
 ``` ansible-playbook -i inventory.yml 5_nginx.yml ```
+
+### deploy project
+
+``` ansible-playbook -i inventory.yml 6_deploy.yml ```
