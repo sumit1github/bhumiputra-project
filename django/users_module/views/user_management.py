@@ -162,7 +162,7 @@ class InviteUser(APIView):
         joining_level_of_parent_user = None
         try:
             parent_user = User.objects.get(id=request.data.get("parent",""))
-            joining_level_of_parent_user = parent_user.joining_level if parent_user.joining_level.isnumeric() else 0
+            
         except:
             return Response({
                 "status": 400,
@@ -170,7 +170,7 @@ class InviteUser(APIView):
                     "parent": "Parent user does not exist."
                 }
             })
-
+        joining_level_of_parent_user = parent_user.joining_level if parent_user.joining_level.isnumeric() else 0
         if serializer.is_valid():
             cleaned_data = serializer.validated_data
             uc = UserController()
