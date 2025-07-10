@@ -1,0 +1,13 @@
+SERVER_PASS=
+SERVER_IP=143.110.253.200
+SERVER_USERNAME=root
+REMOTE_USER_HOME=/root   #cd ~ and pwd -> paste the output here
+
+
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+
+
+GIT_REPO_LINK=
+GIT_BRANCH=master
