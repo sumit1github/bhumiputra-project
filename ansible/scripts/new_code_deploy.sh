@@ -12,5 +12,5 @@ supervisorctl restart django
 
 # for react
 
-sudo cp -r /home/ubuntu/dist/* /var/www/myapp/
+sudo cp -r /root/app/react_js/dist/* /var/www/myapp/
 sudo systemctl restart nginx
