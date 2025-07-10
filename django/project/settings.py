@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'auth_module',
     'users_module',
     'product_management',
+    'common',
 
 ]
 
@@ -57,7 +58,7 @@ MIDDLEWARE = [
 
     'corsheaders.middleware.CorsMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    'common.middleware.custom_exception_handler.GlobalExceptionMiddleware',
+    # 'common.middleware.custom_exception_handler.GlobalExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -97,7 +98,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',  # require login for all APIs
     ],
-    'EXCEPTION_HANDLER': 'common.exception_handler.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'common.custom_exception_handler.custom_exception_handler',
 }
 
 WSGI_APPLICATION = 'project.wsgi.application'

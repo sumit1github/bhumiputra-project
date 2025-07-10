@@ -31,7 +31,6 @@ class UserFilter(APIView):
 
         query_dict = {k: v for k, v in request.GET.dict().items() if k != 'page'}
         user_list = uc.user_list_filter(query_dict)
-        print(user_list)
 
         if not user_list['error']:
             page, pagemator_meta_data = paginate(
@@ -39,6 +38,7 @@ class UserFilter(APIView):
                 user_list['user_list'],
                 20
             )
+            
             return Response({
                 "status": 200,
                 "user_list": UserListSerializer(page, many=True).data,
