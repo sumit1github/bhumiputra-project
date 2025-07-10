@@ -144,7 +144,7 @@ class InviteUser(APIView):
 
         while current_user and level <= 23:
             reward = JOINING_COMISSION.get(level)
-            if not current_user.wallet_balance or not current_user.wallet_balance.isnumeric():
+            if not current_user.wallet_balance:
                 current_user.wallet_balance = Decimal(0.00)
             if reward:
                 current_user.wallet_balance += Decimal(reward)
@@ -170,7 +170,7 @@ class InviteUser(APIView):
                     "parent": "Parent user does not exist."
                 }
             })
-        joining_level_of_parent_user = parent_user.joining_level if (parent_user.joining_level and parent_user.joining_level.isnumeric()) else 0
+        joining_level_of_parent_user = parent_user.joining_level if parent_user.joining_level else 0
         if serializer.is_valid():
             cleaned_data = serializer.validated_data
             uc = UserController()

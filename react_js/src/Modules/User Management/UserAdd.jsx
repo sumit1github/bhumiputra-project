@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from 'react-toastify';
+
+import { Checkbox } from "../../common_components/form_component/Checkbox";
 
 import { InviteUser } from "./auth_calls";
 
@@ -9,6 +11,9 @@ import AdminLayout from "../IT-Dashboard/AdminLayout";
 
 const UserAdd = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const parent = searchParams.get("parent");
+  const parent_name = searchParams.get("name");
 
   const GENDER_OPTIONS = [
     { value: 'MALE', label: 'MALE' },
@@ -20,7 +25,7 @@ const UserAdd = () => {
   const [formData, setFormData] = useState({
     full_name: '',
     password: '',
-    confirm_password:'',
+    confirm_password: '',
     email: '',
     contact1: '',
     contact2: '',
@@ -30,7 +35,8 @@ const UserAdd = () => {
     gender: '',
     address: '',
     zip_code: '',
-    parent: '',
+    parent: parent || '',
+    is_active: false,
   });
 
   const handleChange = (e) => {
@@ -43,17 +49,17 @@ const UserAdd = () => {
 
   // Custom hook for user invite
 
-    const {
-      mutate: inviteUser,
-      isLoading,
-      isError,
-      error,
-      data,
-    } = InviteUser();
-  
+  const {
+    mutate: inviteUser,
+    isLoading,
+    isError,
+    error,
+    data,
+  } = InviteUser();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     inviteUser(formData, {
       onSuccess: (data) => {
         if (data?.status === 200) {
@@ -67,7 +73,7 @@ const UserAdd = () => {
           setFormErrors(data.error); // field-level errors
         }
       },
-  
+
       onError: (err) => {
         if (err?.response?.data?.error) {
           setFormErrors(err.response.data.error);
@@ -89,7 +95,7 @@ const UserAdd = () => {
             <h4 className="mb-0 py-2">📝 User Add Form</h4>
           </div>
           <div className="card-body p-4">
-            
+
             <form onSubmit={handleSubmit}>
               <div className="row g-4">
 
@@ -171,9 +177,21 @@ const UserAdd = () => {
                 </div>
 
                 <div className="col-md-6">
-                  <label htmlFor="parent">Parent User ID <span className="required">*</span></label>
-                  <input id="parent" name="parent" value={formData.parent} onChange={handleChange} className="form-control" placeholder="e.g. 123" />
+                  <label htmlFor="parent">Parent User ID <span className="required">*</span> <span style={{ color: "green" }}>(Parent Name : {parent_name || ""})</span> </label>
+                  <input id="parent" name="parent" value={formData.parent} onChange={handleChange} className="form-control" placeholder="e.g. 123" readOnly={parent ? parent : ""} />
                   {formErrors.parent && <div className="text-danger">{formErrors.parent}</div>}
+                </div>
+
+                <div className="col-md-6">
+
+                  <Checkbox
+                    label="Is Active"
+                    name="is_active"
+                    id="is_active"
+                    value={formData.is_active}
+                    onchangeFunction={handleChange}
+                    hint="Need to be active for login"
+                  />
                 </div>
 
               </div>

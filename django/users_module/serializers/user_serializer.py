@@ -45,6 +45,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
             "roles",
             "password",
             "date_joined",
+            "is_active",
         ]
 
         extra_kwargs = { 
@@ -54,7 +55,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
         'password': {'required': True},
         'date_joined': {'required': True},
         'roles': {'required': True},
-    }
+        'is_active': {'required': True,},
+        }
 
     def validate_password(self, value):
         return make_password(value)
@@ -102,7 +104,8 @@ class InviteUserSerializer(serializers.ModelSerializer):
             'gender',
             'address',
             'zip_code',
-            'parent'
+            'parent',
+            'is_active'
         ]
         extra_kwargs = {
             'full_name': {'required': True},
@@ -117,6 +120,7 @@ class InviteUserSerializer(serializers.ModelSerializer):
             'zip_code': {'required': True},
             'parent': {'required': True},
             'contact2': {'required': False},
+            'is_active': {'required': False, 'default': True},
         }
 
     def validate(self, data):
@@ -147,6 +151,7 @@ class UserDetailUpdateSerializer(serializers.ModelSerializer):
             'gender',
             'address',
             'zip_code',
+            'is_active',
         ]
         extra_kwargs = {
             'full_name': {'required': True},

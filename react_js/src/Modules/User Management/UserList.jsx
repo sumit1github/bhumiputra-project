@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaEdit } from "react-icons/fa";
+import { IoMdPersonAdd } from "react-icons/io";
 import {
   Container,
   Row,
@@ -156,9 +157,11 @@ const UserList = () => {
                       variant="outline-secondary"
                       size="sm"
                       onClick={() => navigate("/users/add")}
-                      className="action-btn"
+                      className="action-btn btn-outline-success"
                       title="Add New User"
+                      style={{ width: "150px" }}
                     >
+                      Add User
                       <BiPlusCircle size={16} />
                     </Button>
                   </div>
@@ -188,7 +191,8 @@ const UserList = () => {
                       <td>{data.achiver_level}</td>
                       <td>{data.wallet_balance}</td>
                       <td>
-                        <FaEdit onClick={() => navigate(`/users/update/${data.id}`)} />
+                        <FaEdit onClick={() => navigate(`/users/update/${data.id}`)} style={{ color: "#0e0eee" }} />
+                        <IoMdPersonAdd title="Add User" onClick={() => navigate(`/users/add?parent=${data.id}&name=${data.full_name}`)} style={{ color: "green" }} />
                       </td>
                     </tr>
                   )}

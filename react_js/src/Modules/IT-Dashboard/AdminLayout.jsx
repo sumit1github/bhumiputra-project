@@ -106,9 +106,8 @@ const AdminLayout = ({ children }) => {
           }`}
       >
         <div className="border header d-flex align-items-center  justify-content-end ">
-          <IoMdNotifications size={20} />
 
-          <Dropdown>
+          {/* <Dropdown>
             <Dropdown.Toggle className="button" id="dropdown-basic">
               <img
                 src={"/dashboard/person.avif"}
@@ -126,7 +125,7 @@ const AdminLayout = ({ children }) => {
                 Logout
               </Dropdown.Item>
             </Dropdown.Menu>
-          </Dropdown>
+          </Dropdown> */}
         </div>
         <div
           className="page-scroll-content dashboard-container"

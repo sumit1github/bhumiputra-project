@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router";
 import { toast } from 'react-toastify';
 
 import { UserDetailsApiCall, UserUpdateApiCall } from "./auth_calls";
+import { Checkbox } from "../../common_components/form_component/Checkbox";
 
 import "./UserAdd.css";
 import AdminLayout from "../IT-Dashboard/AdminLayout";
@@ -28,7 +29,8 @@ const UserUpdate = () => {
     "dob": "",
     "gender": "",
     "address": "",
-    "zip_code": ""
+    "zip_code": "",
+    "is_active": false,
   });
 
   // -------------Loading User Details from API----------------
@@ -58,7 +60,8 @@ const UserUpdate = () => {
         dob: user_detaildata.user.dob || "",
         gender: user_detaildata.user.gender || "",
         address: user_detaildata.user.address?.trim() || "",
-        zip_code: user_detaildata.user.zip_code?.trim() || ""
+        zip_code: user_detaildata.user.zip_code?.trim() || "",
+        is_active: user_detaildata.user.is_active || false,
       };
       console.log("User Details:", sanitizedData);
       setFormData(sanitizedData);
@@ -182,6 +185,18 @@ const UserUpdate = () => {
                   <label htmlFor="address">Address <span className="required">*</span></label>
                   <textarea id="address" name="address" value={formData.address} onChange={handleChange} className="form-control" rows={2}></textarea>
                   {formErrors.address && <div className="text-danger">{formErrors.address}</div>}
+                </div>
+
+                <div className="col-md-6">
+
+                  <Checkbox
+                    label="Is Active"
+                    name="is_active"
+                    id="is_active"
+                    value={formData.is_active}
+                    onchangeFunction={handleChange}
+                    hint="Need to be active for login"
+                  />
                 </div>
 
               </div>
