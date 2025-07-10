@@ -170,7 +170,7 @@ class InviteUser(APIView):
                     "parent": "Parent user does not exist."
                 }
             })
-        joining_level_of_parent_user = parent_user.joining_level if parent_user.joining_level.isnumeric() else 0
+        joining_level_of_parent_user = parent_user.joining_level if (parent_user.joining_level and parent_user.joining_level.isnumeric()) else 0
         if serializer.is_valid():
             cleaned_data = serializer.validated_data
             uc = UserController()
