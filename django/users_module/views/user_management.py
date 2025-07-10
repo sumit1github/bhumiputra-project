@@ -162,7 +162,7 @@ class InviteUser(APIView):
         joining_level_of_parent_user = None
         try:
             parent_user = User.objects.get(id=request.data.get("parent",""))
-            joining_level_of_parent_user = parent_user.joining_level
+            joining_level_of_parent_user = parent_user.joining_level if parent_user.joining_level.isnumeric() else 0
         except:
             return Response({
                 "status": 400,
