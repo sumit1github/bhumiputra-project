@@ -6,6 +6,8 @@ git pull origin master
 
 # for django
 source env/bin/activate
+
+cd ~/app/django
 pip install -r requirements.txt
 python manage.py migrate
 supervisorctl restart django
