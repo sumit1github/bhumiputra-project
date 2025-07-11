@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router";
 import { toast } from 'react-toastify';
+import {
+  FaUserPlus,
+  FaUser,
+  FaEnvelope,
+  FaLock,
+  FaPhone
+} from 'react-icons/fa';
 
 import { Checkbox } from "../../common_components/form_component/Checkbox";
 
@@ -89,121 +96,193 @@ const UserAdd = () => {
 
   return (
     <AdminLayout>
-      <div className="container mt-5 mb-5">
-        <div className="card shadow-lg rounded-4 border-0">
-          <div className="card-header text-white rounded-top-4" style={{ background: 'linear-gradient(to right, #4e54c8, #8f94fb)' }}>
-            <h4 className="mb-0 py-2">📝 User Add Form</h4>
-          </div>
-          <div className="card-body p-4">
 
-            <form onSubmit={handleSubmit}>
-              <div className="row g-4">
+      <div className="bhumi_putra_form">
+        <div className="container">
+          <div className="main-container">
 
-                {/* Basic Info */}
-                <div className="col-md-6">
-                  <label htmlFor="full_name">Full Name <span className="required">*</span></label>
-                  <input id="full_name" name="full_name" value={formData.full_name} onChange={handleChange} className="form-control" placeholder="Full name" />
-                  {formErrors.full_name && <div className="text-danger">{formErrors.full_name}</div>}
+            <div className="form-header">
+              <h2><FaUserPlus className="me-3" />User Registration</h2>
+              <p className="subtitle">Invite User</p>
+            </div>
+
+            <div className="form-body">
+              <form id="userRegistrationForm" onSubmit={handleSubmit}>
+                {/* Personal Information Section */}
+                <div className="form-section">
+                  <h3 className="section-title">Personal Information</h3>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Full Name <span className="required">*</span></label>
+                        <div className="input-group">
+                          <input type="text" className="form-control" placeholder="Enter your full name" id="full_name" name="full_name" onChange={handleChange} value={formData.full_name} required />
+                          <span className="input-icon"><FaUser /></span>
+                        </div>
+                        {formErrors.full_name && <div className="text-danger">{formErrors.full_name}</div>}
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Email <span className="required">*</span></label>
+                        <div className="input-group">
+                          <input id="email" type="email" name="email" value={formData.email} onChange={handleChange} className="form-control" placeholder="Email" />
+                          <span className="input-icon"><FaEnvelope /></span>
+                        </div>
+                        {formErrors.email && <div className="text-danger">{formErrors.email}</div>}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Gender <span className="required">*</span></label>
+                        <select id="gender" name="gender" value={formData.gender} onChange={handleChange} className="form-select">
+                          {GENDER_OPTIONS.map(g => <option key={g.value} value={g.value}>{g.label}</option>)}
+                        </select>
+                        {formErrors.gender && <div className="text-danger">{formErrors.gender}</div>}
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Date of Birth <span className="required">*</span></label>
+                        <input id="dob" type="date" name="dob" value={formData.dob} onChange={handleChange} className="form-control" />
+                        {formErrors.dob && <div className="text-danger">{formErrors.dob}</div>}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="col-md-6">
-                  <label htmlFor="password">Password <span className="required">*</span></label>
-                  <input id="password" type="password" name="password" value={formData.password} onChange={handleChange} className="form-control" placeholder="Password" />
-                  {formErrors.password && <div className="text-danger">{formErrors.password}</div>}
+                {/* Security Section */}
+                <div className="form-section">
+                  <h3 className="section-title">Security Information</h3>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Password <span className="required">*</span></label>
+                        <div className="input-group">
+                          <input id="password" type="password" name="password" value={formData.password} onChange={handleChange} className="form-control" placeholder="Password" />
+                          <span className="input-icon"><FaLock /></span>
+                        </div>
+                        {formErrors.password && <div className="text-danger">{formErrors.password}</div>}
+
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Confirm Password <span className="required">*</span></label>
+                        <div className="input-group">
+                          <input id="confirm_password" type="password" name="confirm_password" value={formData.confirm_password} onChange={handleChange} className="form-control" placeholder="Confirm Password" />
+                          <span className="input-icon"><FaLock /></span>
+                        </div>
+                        {formErrors.confirm_password && <div className="text-danger">{formErrors.confirm_password}</div>}
+
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="col-md-6">
-                  <label htmlFor="confirm_password">Confirm Password <span className="required">*</span></label>
-                  <input id="confirm_password" type="password" name="confirm_password" value={formData.confirm_password} onChange={handleChange} className="form-control" placeholder="Confirm Password" />
-                  {formErrors.confirm_password && <div className="text-danger">{formErrors.confirm_password}</div>}
+                {/* Contact Information Section */}
+                <div className="form-section">
+                  <h3 className="section-title">Contact Information</h3>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Primary Contact <span className="required">*</span></label>
+                        <div className="input-group">
+                          <input id="contact1" name="contact1" value={formData.contact1} onChange={handleChange} className="form-control" placeholder="Primary contact" />
+                          <span className="input-icon"><FaPhone /></span>
+                        </div>
+                        {formErrors.contact1 && <div className="text-danger">{formErrors.contact1}</div>}
+
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Secondary Contact</label>
+                        <div className="input-group">
+                          <input id="contact2" name="contact2" value={formData.contact2} onChange={handleChange} className="form-control" placeholder="Secondary contact" />
+                          <span className="input-icon"><FaPhone /></span>
+                        </div>
+                        {formErrors.contact2 && <div className="text-danger">{formErrors.contact2}</div>}
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Pin Code <span className="required">*</span></label>
+                        <input id="zip_code" name="zip_code" value={formData.zip_code} onChange={handleChange} className="form-control" />
+                      </div>
+                      {formErrors.zip_code && <div className="text-danger">{formErrors.zip_code}</div>}
+
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Date Joined <span className="required">*</span></label>
+                        <input id="date_joined" name="date_joined" type="datetime-local" value={formData.date_joined} onChange={handleChange} className="form-control" />
+                      </div>
+                      {formErrors.date_joined && <div className="text-danger">{formErrors.date_joined}</div>}
+
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label className="form-label">Address <span className="required">*</span></label>
+                    <textarea id="address" name="address" value={formData.address} onChange={handleChange} className="form-control" rows={2}></textarea>
+                    {formErrors.address && <div className="text-danger">{formErrors.address}</div>}
+                  </div>
                 </div>
 
-                <div className="col-md-6">
-                  <label htmlFor="email">Email <span className="required">*</span></label>
-                  <input id="email" type="email" name="email" value={formData.email} onChange={handleChange} className="form-control" placeholder="Email" />
-                  {formErrors.email && <div className="text-danger">{formErrors.email}</div>}
+                {/* Additional Information Section */}
+                <div className="form-section">
+                  <h3 className="section-title">Additional Information</h3>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="form-group parent-info">
+                        <label className="form-label">Parent User ID <span className="required">*</span></label>
+                        <input id="parent" name="parent" value={formData.parent} onChange={handleChange} className="form-control" placeholder="e.g. 123" readOnly={parent ? parent : ""} />
+                        {formErrors.parent && <div className="text-danger">{formErrors.parent}</div>}
+                        <div className="hint-text">Parent Name will be displayed based on ID</div>
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Account Status</label>
+                        <div className="d-flex align-items-center mt-2">
+                          <Checkbox
+                            name="is_active"
+                            id="is_active"
+                            value={formData.is_active}
+                            onchangeFunction={handleChange}
+                          />
+                        </div>
+                        <div className="hint-text">Account needs to be active for login</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div className="col-md-6">
-                  <label htmlFor="contact1">Contact 1 <span className="required">*</span></label>
-                  <input id="contact1" name="contact1" value={formData.contact1} onChange={handleChange} className="form-control" placeholder="Primary contact" />
-                  {formErrors.contact1 && <div className="text-danger">{formErrors.contact1}</div>}
+                {/* Submit Button */}
+                <div className="text-center mt-4">
+                  <button type="submit" className="submit-btn">
+                    <FaUserPlus className="me-2" />Create Account
+                  </button>
                 </div>
-
-                <div className="col-md-6">
-                  <label htmlFor="contact2">Contact 2</label>
-                  <input id="contact2" name="contact2" value={formData.contact2} onChange={handleChange} className="form-control" placeholder="Secondary contact" />
-                  {formErrors.contact2 && <div className="text-danger">{formErrors.contact2}</div>}
-                </div>
-
-                {/* Date & Time */}
-                <div className="col-md-6">
-                  <label htmlFor="date_joined">Date Joined <span className="required">*</span></label>
-                  <input id="date_joined" name="date_joined" type="datetime-local" value={formData.date_joined} onChange={handleChange} className="form-control" />
-                  {formErrors.date_joined && <div className="text-danger">{formErrors.date_joined}</div>}
-                </div>
-
-                {/* Personal Info */}
-                <div className="col-md-3">
-                  <label htmlFor="age">Age <span className="required">*</span></label>
-                  <input id="age" type="number" name="age" value={formData.age} onChange={handleChange} className="form-control" />
-                  {formErrors.age && <div className="text-danger">{formErrors.age}</div>}
-                </div>
-
-                <div className="col-md-3">
-                  <label htmlFor="dob">Date of Birth <span className="required">*</span></label>
-                  <input id="dob" type="date" name="dob" value={formData.dob} onChange={handleChange} className="form-control" />
-                  {formErrors.dob && <div className="text-danger">{formErrors.dob}</div>}
-                </div>
-
-                <div className="col-md-3">
-                  <label htmlFor="gender">Gender <span className="required">*</span></label>
-                  <select id="gender" name="gender" value={formData.gender} onChange={handleChange} className="form-select">
-                    {GENDER_OPTIONS.map(g => <option key={g.value} value={g.value}>{g.label}</option>)}
-                  </select>
-                  {formErrors.gender && <div className="text-danger">{formErrors.gender}</div>}
-                </div>
-
-                <div className="col-md-3">
-                  <label htmlFor="zip_code">Pin Code <span className="required">*</span></label>
-                  <input id="zip_code" name="zip_code" value={formData.zip_code} onChange={handleChange} className="form-control" />
-                  {formErrors.zip_code && <div className="text-danger">{formErrors.zip_code}</div>}
-                </div>
-
-                <div className="col-md-12">
-                  <label htmlFor="address">Address <span className="required">*</span></label>
-                  <textarea id="address" name="address" value={formData.address} onChange={handleChange} className="form-control" rows={2}></textarea>
-                  {formErrors.address && <div className="text-danger">{formErrors.address}</div>}
-                </div>
-
-                <div className="col-md-6">
-                  <label htmlFor="parent">Parent User ID <span className="required">*</span> <span style={{ color: "green" }}>(Parent Name : {parent_name || ""})</span> </label>
-                  <input id="parent" name="parent" value={formData.parent} onChange={handleChange} className="form-control" placeholder="e.g. 123" readOnly={parent ? parent : ""} />
-                  {formErrors.parent && <div className="text-danger">{formErrors.parent}</div>}
-                </div>
-
-                <div className="col-md-6">
-
-                  <Checkbox
-                    label="Is Active"
-                    name="is_active"
-                    id="is_active"
-                    value={formData.is_active}
-                    onchangeFunction={handleChange}
-                    hint="Need to be active for login"
-                  />
-                </div>
-
-              </div>
-
-              <div className="text-end mt-5">
-                <button className="btn btn-primary px-4 py-2 rounded-pill shadow" type="submit">Submit</button>
-              </div>
-
-            </form>
+              </form>
+            </div>
           </div>
         </div>
       </div>
+
+
+
+
+
+
     </AdminLayout>
   );
 };

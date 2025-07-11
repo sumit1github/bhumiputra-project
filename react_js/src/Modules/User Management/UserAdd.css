@@ -1,4 +1,277 @@
-.required{
-  color: red;
-  font-size: 15px;
-}
+ :root {
+   --primary-color: #912712;
+   --primary-dark: #7a1f0f;
+   --primary-light: #a5301d;
+   --secondary-color: #ffffff;
+   --accent-color: #f8f9fa;
+   --text-dark: #2c3e50;
+   --shadow: 0 10px 30px rgba(145, 39, 18, 0.1);
+   --shadow-hover: 0 15px 40px rgba(145, 39, 18, 0.2);
+ }
+
+
+
+ .bhumi_putra_form {
+   background: linear-gradient(135deg, var(--accent-color) 0%, #e9ecef 100%);
+   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+   min-height: 100vh;
+   padding: 20px 0;
+ }
+
+ .bhumi_putra_form .main-container {
+   max-width: 1200px;
+   margin: 0 auto;
+   background: var(--secondary-color);
+   border-radius: 20px;
+   box-shadow: var(--shadow);
+   overflow: hidden;
+   transition: all 0.3s ease;
+ }
+
+ .bhumi_putra_form .main-container:hover {
+   box-shadow: var(--shadow-hover);
+ }
+
+ .bhumi_putra_form .form-header {
+   background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+   color: var(--secondary-color);
+   padding: 30px;
+   text-align: center;
+   position: relative;
+   overflow: hidden;
+ }
+
+ .bhumi_putra_form .form-header::before {
+   content: '';
+   position: absolute;
+   top: -50%;
+   left: -50%;
+   width: 200%;
+   height: 200%;
+   background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+   animation: rotate 20s linear infinite;
+ }
+
+ @keyframes rotate {
+   0% {
+     transform: rotate(0deg);
+   }
+
+   100% {
+     transform: rotate(360deg);
+   }
+ }
+
+ .bhumi_putra_form .form-header h2 {
+   font-size: 2.5rem;
+   font-weight: 700;
+   margin: 0;
+   position: relative;
+   z-index: 1;
+ }
+
+ .bhumi_putra_form .form-header .subtitle {
+   font-size: 1.1rem;
+   margin-top: 10px;
+   opacity: 0.9;
+   position: relative;
+   z-index: 1;
+ }
+
+ .bhumi_putra_form .form-body {
+   padding: 40px;
+ }
+
+ .bhumi_putra_form .form-section {
+   margin-bottom: 30px;
+ }
+
+ .bhumi_putra_form .section-title {
+   color: var(--primary-color);
+   font-size: 1.3rem;
+   font-weight: 600;
+   margin-bottom: 20px;
+   padding-bottom: 10px;
+   border-bottom: 2px solid var(--primary-color);
+   position: relative;
+ }
+
+ .bhumi_putra_form .section-title::after {
+   content: '';
+   position: absolute;
+   bottom: -2px;
+   left: 0;
+   width: 50px;
+   height: 2px;
+   background: var(--primary-light);
+ }
+
+ .bhumi_putra_form .form-group {
+   margin-bottom: 25px;
+   position: relative;
+ }
+
+ .bhumi_putra_form .form-label {
+   color: var(--text-dark);
+   font-weight: 600;
+   margin-bottom: 8px;
+   display: block;
+   font-size: 0.95rem;
+ }
+
+ .bhumi_putra_form .required {
+   color: var(--primary-color);
+   margin-left: 3px;
+ }
+
+ .bhumi_putra_form .form-control,
+ .bhumi_putra_form .form-select {
+   border: 2px solid #e9ecef;
+   border-radius: 12px;
+   padding: 12px 15px;
+   font-size: 1rem;
+   transition: all 0.3s ease;
+   background: var(--secondary-color);
+ }
+
+ .bhumi_putra_form .form-control:focus,
+ .bhumi_putra_form .form-select:focus {
+   border-color: var(--primary-color);
+   box-shadow: 0 0 0 0.2rem rgba(145, 39, 18, 0.25);
+   outline: none;
+ }
+
+ .bhumi_putra_form .form-control::placeholder {
+   color: #6c757d;
+   opacity: 0.7;
+ }
+
+ .bhumi_putra_form .input-group {
+   position: relative;
+ }
+
+ .bhumi_putra_form .input-icon {
+   position: absolute;
+   right: 15px;
+   top: 50%;
+   transform: translateY(-50%);
+   color: var(--primary-color);
+   z-index: 3;
+ }
+
+ .bhumi_putra_form .toggle-switch {
+   position: relative;
+   width: 60px;
+   height: 30px;
+   background: #ddd;
+   border-radius: 25px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+ }
+
+ .bhumi_putra_form .toggle-switch.active {
+   background: var(--primary-color);
+ }
+
+ .bhumi_putra_form .toggle-switch::before {
+   content: '';
+   position: absolute;
+   width: 26px;
+   height: 26px;
+   border-radius: 50%;
+   background: white;
+   top: 2px;
+   left: 2px;
+   transition: all 0.3s ease;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+ }
+
+ .bhumi_putra_form .toggle-switch.active::before {
+   transform: translateX(30px);
+ }
+
+ .bhumi_putra_form .submit-btn {
+   background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+   color: var(--secondary-color);
+   border: none;
+   padding: 15px 40px;
+   border-radius: 50px;
+   font-size: 1.1rem;
+   font-weight: 600;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   position: relative;
+   overflow: hidden;
+   text-transform: uppercase;
+   letter-spacing: 1px;
+ }
+
+ .bhumi_putra_form .submit-btn:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 10px 25px rgba(145, 39, 18, 0.3);
+ }
+
+ .bhumi_putra_form .submit-btn:active {
+   transform: translateY(0);
+ }
+
+ .bhumi_putra_form .row>div {
+   padding: 0 10px;
+ }
+
+ .bhumi_putra_form .card-style {
+   background: var(--secondary-color);
+   border-radius: 15px;
+   padding: 20px;
+   margin-bottom: 20px;
+   border: 1px solid #f0f0f0;
+   transition: all 0.3s ease;
+ }
+
+ .bhumi_putra_form .card-style:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 5px 15px rgba(145, 39, 18, 0.1);
+ }
+
+ @media (max-width: 768px) {
+   .bhumi_putra_form .form-body {
+     padding: 20px;
+   }
+
+   .bhumi_putra_form .form-header h2 {
+     font-size: 2rem;
+   }
+
+   .bhumi_putra_form .row>div {
+     padding: 0 5px;
+     margin-bottom: 15px;
+   }
+ }
+
+ @media (max-width: 576px) {
+   .bhumi_putra_form .main-container {
+     margin: 10px;
+     border-radius: 15px;
+   }
+
+   .bhumi_putra_form .form-header {
+     padding: 20px;
+   }
+
+   .bhumi_putra_form .form-header h2 {
+     font-size: 1.8rem;
+   }
+ }
+
+ .bhumi_putra_form .hint-text {
+   font-size: 0.85rem;
+   color: #6c757d;
+   margin-top: 5px;
+ }
+
+ .bhumi_putra_form .parent-info {
+   background: #f8f9fa;
+   border-radius: 10px;
+   padding: 15px;
+   border-left: 4px solid var(--primary-color);
+ }

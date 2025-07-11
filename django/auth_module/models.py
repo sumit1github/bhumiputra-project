@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 from .manager import MyAccountManager
 from .constants import GENDER_CHOICES
+from utils import GetDateTime
 
 class User(AbstractBaseUser, PermissionsMixin):
     full_name = models.CharField(max_length=255, null= True, blank= True)
@@ -12,7 +13,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(null=True,blank=True,unique=True)
     contact1 = models.CharField(max_length=255, null= True, blank= True, unique= True)
     contact2 = models.CharField(max_length=255, null= True, blank= True)
-    role = models.TextField() # comma seperated values
+    role = models.TextField() # comma separated values
     token= models.TextField(null=True, blank=True)
 
     is_staff = models.BooleanField(default=False)
@@ -38,11 +39,16 @@ class User(AbstractBaseUser, PermissionsMixin):
     wallet_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=True, blank=True)
 
     USERNAME_FIELD = "email"	
-    REQUIRED_FIELDS = ["password","contact1"]
+    REQUIRED_FIELDS = ["password","contact1", "full_name",]
     
 
     objects = MyAccountManager()
     
+    def save(self, *args, **kwargs):
+        td = GetDateTime()
+        self.age  = td.age_from_dob(self.dob)
+        
+        super(User, self).save(*args, **kwargs)
     
     @property
     def full_contact_number(self):

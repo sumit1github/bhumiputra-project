@@ -11,13 +11,14 @@ import UserAdd from "./Modules/User Management/UserAdd";
 import UserUpdate from "./Modules/User Management/UserUpdate";
 import { ProductList } from "./Modules/ProductManagement/ProductList";
 import { ProductUpdate } from "./Modules/ProductManagement/ProductUpdate";
+import { ProductAdd } from "./Modules/ProductManagement/ProductAdd";
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="login" element={<Login />} />
-      
+
         {/* user management */}
         <Route path="users" element={<UserList />} />
         <Route path="users/add" element={<UserAdd />} />
@@ -25,8 +26,9 @@ function App() {
 
         {/* user management */}
         <Route path="products/list" element={<ProductList />} />
+        <Route path="products/add" element={<ProductAdd />} />
         <Route path="products/update/:product_id" element={<ProductUpdate />} />
-        
+
 
       </Routes>
 

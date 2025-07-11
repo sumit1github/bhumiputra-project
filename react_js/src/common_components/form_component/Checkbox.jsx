@@ -1,17 +1,15 @@
 import React from 'react';
 
 export const Checkbox = ({
-    label = "NO LAbel",
-    name = "no_name",
-    id = "no_id",
-    value = "no_value",
-    onchangeFunction = "",
-    hint = "",
+  name = "no_name",
+  id = "no_id",
+  value = "no_value",
+  onchangeFunction = "",
 }) => {
-    return (
-        <>
-            <style>
-                {`
+  return (
+    <>
+      <style>
+        {`
         .checkbox-wrapper-5 .check {
           --size: 40px;
           position: relative;
@@ -107,16 +105,15 @@ export const Checkbox = ({
           line-height: 0;
         }
             `}
-            </style>
+      </style>
 
-            <span>{label} (Hint : {hint})</span>
-            <div className="checkbox-wrapper-5">
-                <div className="check">
-                    <input className="form-check-input" onChange={onchangeFunction} type="checkbox" value={value} name={name} id={id} checked={value} />
-                    <label style={{ marginLeft: "10px" }} className="form-check-label" htmlFor={id}>
-                    </label>
-                </div>
-            </div>
-        </>
-    );
+      <div className="checkbox-wrapper-5">
+        <div className="check">
+          <input className="form-check-input" onChange={onchangeFunction} type="checkbox" value={value} name={name} id={id} checked={value} />
+          <label style={{ marginLeft: "10px" }} className="form-check-label" htmlFor={id}>
+          </label>
+        </div>
+      </div>
+    </>
+  );
 };

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { useParams } from "react-router";
 import { useNavigate } from "react-router";
 import {
   FaUserPlus,
@@ -8,12 +7,13 @@ import {
 
 
 import AdminLayout from "../IT-Dashboard/AdminLayout";
-import { productUpdate, productDetailsApiCall } from "./product_calls";
+import { productCreate } from "./product_calls";
 
-export const ProductUpdate = () => {
+export const ProductAdd = () => {
   const [formErrors, setFormErrors] = useState({});
-  const { product_id } = useParams();
   const navigate = useNavigate();
+
+
 
   const [formData, setFormData] = useState({
     uid: '',
@@ -24,76 +24,51 @@ export const ProductUpdate = () => {
     stock: 1,
   });
 
-  // -------------- Loading Product Details from API ----------------
-
-  const {
-    mutate: getProductDetails,
-    data: product_detaildata
-  } = productDetailsApiCall();
-
-
-  useEffect(() => {
-    getProductDetails(product_id);
-  }, [product_id]);
-
-  useEffect(() => {
-
-    if (product_detaildata) {
-
-      setFormData(prev => ({
-        ...prev,
-        uid: product_detaildata.product.uid,
-        name: product_detaildata.product.name,
-        brand: product_detaildata.product.brand,
-        buy_price: product_detaildata.product.buy_price,
-        sell_price: product_detaildata.product.sell_price,
-        stock: product_detaildata.product.stock,
-      }));
-    }
-  }, [product_detaildata]);
 
   //  -------------- product update -----------------
 
 
   const {
-    mutate: updateProduct,
-    data: productUpdatedata
-  } = productUpdate();
+    mutate: createProduct,
+    data: ProductCreateData,
+    isLoading: createIsLoading,
+    isError: createIsError,
+    error: createError,
+  } = productCreate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    updateProduct(product_id, formData);
-    updateProduct({
-      "product_id": product_id,
-      "productData": formData
+    createProduct(formData, {
+      onSuccess: (data) => {
+        if (data?.status === 200) {
+          setFormErrors({});
+          toast.success("Product Added successfully!");
+          navigate("/products/list");
+        } else if (data?.status === 400 && data?.error) {
+          console.log("Error data:", data.error);
+          setFormErrors(data.error);
+        }
+      },
+
+      onError: (err) => {
+        if (err?.response?.data?.error) {
+          setFormErrors(err.response.data.error);
+        } else {
+          setFormErrors({ general: "Something went wrong." });
+        }
+      },
     });
 
   };
-
-  useEffect(() => {
-    if (!productUpdatedata) return;
-
-    if (productUpdatedata.status === 200) {
-      toast.success("Product Updated Successfully");
-      navigate('/products/list');
-    }
-    else if (productUpdatedata.status === 400) {
-      setFormErrors(productUpdatedata.error);
-    }
-    else {
-      toast.error("Failed to update product.");
-    }
-  }, [productUpdatedata, navigate]);
-
 
   return (
     <AdminLayout>
@@ -103,7 +78,7 @@ export const ProductUpdate = () => {
 
             <div className="form-header">
               <h2><FaUserPlus className="me-3" />Product Management</h2>
-              <p className="subtitle">Update Product</p>
+              <p className="subtitle">Add Product</p>
             </div>
 
             <div className="form-body">
@@ -174,7 +149,7 @@ export const ProductUpdate = () => {
                 {/* Submit Button */}
                 <div className="text-center mt-4">
                   <button type="submit" className="submit-btn">
-                    <FaUserPlus className="me-2" />Update Product
+                    <FaUserPlus className="me-2" />Add Product
                   </button>
                 </div>
               </form>
