@@ -46,7 +46,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def save(self, *args, **kwargs):
         td = GetDateTime()
-        self.age  = td.age_from_dob(self.dob)
+        if self.dob:
+            self.age  = td.age_from_dob(self.dob)
         
         super(User, self).save(*args, **kwargs)
     
