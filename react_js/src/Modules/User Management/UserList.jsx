@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
+import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate } from "react-router";
 
 import { getUserList, UserSearchApiCall } from "./auth_calls";
@@ -162,7 +163,7 @@ const UserList = () => {
                       <FaEdit />
                     </button>
                     <button onClick={() => navigate(`/users/add?parent=${user.id}&name=${user.full_name}`)} className="btn-action btn-delete">
-                      <FaTrash />
+                      <IoMdPersonAdd />
                     </button>
                   </div>
                 </td>
