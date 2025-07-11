@@ -7,6 +7,10 @@ class UserController:
         self.obj = user
     
     def user_list_filter(self, filter={}):
+        fake_id = filter.get("id", None)
+        if fake_id:
+            fake_id = fake_id[7:] if len(fake_id) >= 8 else ""
+            filter["id"] = fake_id
         try:
             users = User.objects.filter(**filter).order_by("-id")
             return {"error": False, "user_list": users, "message":""}

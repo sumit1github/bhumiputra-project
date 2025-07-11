@@ -4,12 +4,12 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 from .manager import MyAccountManager
 from .constants import GENDER_CHOICES
-from utils import GetDateTime
+from utils import GetDateTime, generate_unique_id
 
 class User(AbstractBaseUser, PermissionsMixin):
     full_name = models.CharField(max_length=255, null= True, blank= True)
     password = models.TextField(null=True,blank=True)
-    
+    id_prefix = models.CharField(max_length=10, null=True,blank=True)
     email = models.EmailField(null=True,blank=True,unique=True)
     contact1 = models.CharField(max_length=255, null= True, blank= True, unique= True)
     contact2 = models.CharField(max_length=255, null= True, blank= True)
@@ -48,6 +48,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         td = GetDateTime()
         if self.dob:
             self.age  = td.age_from_dob(self.dob)
+        
+        if not self.id_prefix:
+            # Generate a unique ID prefix if not provided
+            self.id_prefix = f"BP{str(generate_unique_id(5))}"
         
         super(User, self).save(*args, **kwargs)
     

@@ -20,9 +20,11 @@ class MyAccountManager(BaseUserManager):
             email=self.normalize_email(email),
             password=password,
             contact1=contact1
-            
         )
 
+        user.role = "ADMIN,IT"
+        user.joining_level = 0
+        user.achiver_level = 0
         user.is_staff = True
         user.is_active = True
         user.is_superuser = True
