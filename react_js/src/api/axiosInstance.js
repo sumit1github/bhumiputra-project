@@ -23,6 +23,7 @@ axiosInstance.interceptors.response.use(
 
     if (status === 401 || status === 403) {
       window.location.href = "/login"; // ✅ Redirect to login page
+      localStorage.removeItem("accessToken");
     }
 
     return Promise.reject(error);
