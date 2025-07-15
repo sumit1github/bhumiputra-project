@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { CgClose, CgProfile } from "react-icons/cg";
 import { FaBox, FaRegEdit, FaTachometerAlt, FaUsers } from "react-icons/fa";
-import { SiTicktick } from "react-icons/si";
-import Dropdown from "react-bootstrap/Dropdown";
+import { IoMdRefresh, IoMdWallet } from "react-icons/io";
 import { Link, useNavigate } from 'react-router';
+import { useSelector, useDispatch } from 'react-redux';
+
+
+
 
 import {
   MdExitToApp,
@@ -11,11 +14,14 @@ import {
 } from "react-icons/md";
 
 import "./AdminLayout.css";
-import { useSelector } from 'react-redux';
-
+import { logOut } from "../Auth/auth_calls";
+import { SquareButton89 } from "../../common_components/buttons/SquareButton89";
+import { UserDetailsApiCall } from "../User Management/auth_calls";
+import { loginSuccess } from "../../store/Slices/Room/UserSlice";
 
 
 const AdminLayout = ({ children }) => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const userData = useSelector((state) => state.user);
 
@@ -34,6 +40,44 @@ const AdminLayout = ({ children }) => {
       }, 300); // Delay navigation to ensure sidebar state is updated
     } else {
       navigate(path);
+    }
+  };
+
+  // // Logout function
+  const {
+    mutate: logout,
+  } = logOut();
+
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem("accessToken");
+    navigate("/login");
+  };
+
+
+  // -------------Loading User Details from API----------------
+  const {
+    mutate: loadUserDetails,
+    data: user_detaildata,
+    isLoading: user_detailisLoading,
+    isError: user_detailisError,
+    error: user_detailerror
+  } = UserDetailsApiCall();
+
+  const refreshUserDetails = () => {
+    if (userData?.user?.id) {
+      loadUserDetails(userData?.user?.id, {
+        onSuccess: (data) => {
+          console.log("User details loaded successfully:", data);
+          dispatch(loginSuccess(data.user)); // Update Redux state
+        },
+        onError: (error) => {
+          console.error("Error loading user details:", error);
+        },
+      });
+    } else {
+      console.error("User ID is null, cannot refresh user details.");
     }
   };
 
@@ -61,14 +105,20 @@ const AdminLayout = ({ children }) => {
                 className="person-image-2 border"
               />
               <div>
-                <div className="text-white text-center">{userData?.user?.full_name}</div>
+                <div className="text-white text-center">{userData?.user?.id_prefix}{userData?.user?.id}</div>
+                <div className="text-white text-sm text-center">{userData?.user?.full_name}</div>
                 <div className="text-white text-sm ">{userData?.user?.email}</div>
               </div>
               <div className="d-flex gap-4 align-items-center p-3">
-                <CgProfile size={24} title="Profile" />
-                <FaRegEdit size={24} title="Edit Profile" />
-                <MdExitToApp size={26} title="Logout" />
+                <IoMdWallet size={24} title="Profile" style={{ color: "aliceblue" }} />
+                <IoMdRefresh size={24} title="Refresh Profile" style={{ color: "aliceblue" }} onClick={refreshUserDetails} />
+                <MdExitToApp size={26} title="Logout" onClick={handleLogout} style={{ color: "aliceblue" }} />
               </div>
+
+              {!userData?.user?.roles?.includes('ADMIN') && (
+                <p><SquareButton89 label={`JOIN-PINS: ${userData?.user?.invite_tokens}`} /></p>
+              )}
+
               <hr className="border-b" />
               <ul className="nav side_nav nav-pills  flex-column mb-auto">
 
@@ -93,14 +143,26 @@ const AdminLayout = ({ children }) => {
                 </li>
 
                 {/* Products */}
-                <li className="nav-item">
-                  <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/products') ? 'nav-link active' : ''}`}>
-                    <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
-                      <FaBox className="text-white" />
-                      <span onClick={() => handleNavigation('/products/list')} className="text-decoration-none text-white">Products</span>
-                    </div>
-                  </div>
-                </li>
+
+                {(
+                  userData?.user?.roles?.includes('ADMIN') ||
+                  userData?.user?.roles?.includes('IT')
+                ) && (
+                    <li className="nav-item">
+                      <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/products') ? 'nav-link active' : ''}`}>
+                        <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
+                          <FaBox className="text-white" />
+                          <span
+                            onClick={() => handleNavigation('/products/list')}
+                            className="text-decoration-none text-white"
+                          >
+                            Products
+                          </span>
+                        </div>
+                      </div>
+                    </li>
+                  )}
+
               </ul>
             </div>
           </div>
@@ -114,25 +176,7 @@ const AdminLayout = ({ children }) => {
         <div className="border header d-flex align-items-center  justify-content-center">
 
           <img src="/logo.png" alt="Logo" className="person-image-3" />
-          {/* <Dropdown>
-            <Dropdown.Toggle className="button" id="dropdown-basic">
-              <img
-                src={"/dashboard/person.avif"}
-                className="person-image"
-              ></img>
-              Admin
-            </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-              <Dropdown.Item href="#/action-1">Action 1</Dropdown.Item>
-              <Dropdown.Item href="#/action-2"> Action 2</Dropdown.Item>
-              <Dropdown.Item href="#/action-3">Action 3</Dropdown.Item>{" "}
-              <Dropdown.Divider />
-              <Dropdown.Item eventKey="4" href="/">
-                Logout
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown> */}
         </div>
         <div
           className="dashboard-container"

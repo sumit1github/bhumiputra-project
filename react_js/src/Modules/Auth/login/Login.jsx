@@ -26,7 +26,6 @@ const Login = () => {
 
   const handleLogin = async (e) => {
 
-    console.log("Login attempted:", formData);
     login(formData, {
       onSuccess: (data) => {
         console.log("Login successful:", data);

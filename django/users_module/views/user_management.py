@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django.db import transaction
 from decimal import Decimal
+from django.contrib.auth.hashers import make_password
+from rest_framework.authtoken.models import Token
 
 from utils import serilalizer_error_list, paginate
 from .. swagger_doc import get_swagger_api_details
@@ -12,13 +14,16 @@ from users_module.serializers import (
     UserListSerializer, 
     UserCreateSerializer,
     InviteUserSerializer,
-    UserDetailUpdateSerializer
+    UserUpdateSerializer,
+    
+    
 )
 from auth_module.models import User
 from auth_module.custom_decorator import access_limited_to
-from ..constants import JOINING_COMISSION
+from ..constants import JOINING_COMISSION, ACHIVER_LEVELS
+from auth_module.serilaizer import UserSerializer
 
-@method_decorator(access_limited_to('ADMIN,IT'), name='dispatch')
+
 class UserFilter(APIView):
     """
     userList
@@ -30,7 +35,7 @@ class UserFilter(APIView):
         uc = UserController()
 
         query_dict = {k: v for k, v in request.GET.dict().items() if k != 'page'}
-        user_list = uc.user_list_filter(query_dict)
+        user_list = uc.user_list_filter(request, query_dict)
 
         if not user_list['error']:
             page, pagemator_meta_data = paginate(
@@ -60,6 +65,8 @@ class UserFilter(APIView):
             cleaned_data = serializer.validated_data
             cleaned_data["role"] = cleaned_data["roles"]
             cleaned_data.pop("roles",[])
+            cleaned_data["password"] = make_password(cleaned_data["password"])
+            
             uc = UserController()
             user_create = uc.add_new_user(cleaned_data)
 
@@ -91,11 +98,15 @@ class UserFilter(APIView):
         try:
             user = User.objects.get(pk=pk)
         except User.DoesNotExist:
-            return Response({"status": 400, "message": "User not found"})
-
+            return Response({"status": 400, "message": "User not found"})\
+            
         serializer = UserCreateSerializer(user, data=request.data, partial=True)
 
         if serializer.is_valid():
+            cleaned_data = serializer.validated_data
+            if 'password' in cleaned_data:
+                cleaned_data["password"] = make_password(cleaned_data["password"])
+                print(cleaned_data["password"])
             serializer.save()
             return Response({"status": 200, "message": "User updated successfully"})
         else:
@@ -126,29 +137,66 @@ class UserFilter(APIView):
                 "message": user_inactive["message"]
             })
         
-
-@method_decorator(access_limited_to('ADMIN,IT'), name='dispatch')
+@method_decorator(transaction.atomic, name='dispatch')
 class InviteUser(APIView):
 
-    @transaction.atomic
+    def invite_token_and_achiver_level_update(self, request, current_user, parent_user):
+        """ Update the achiver level of parent users based on the current user's achiver level for new invitation."""
+        
+        # Reduce invite token
+
+        if not current_user.is_superuser or not current_user.has_access("ADMIN,IT"):
+            current_user.invite_tokens = max(current_user.invite_tokens - 1, 0)
+
+            if parent_user.achiver_level < 5:
+                parent_user.achiver_level += 1
+            
+            current_user.save()
+
+        else:
+
+            parent_user.achiver_level += 1
+            print(parent_user.achiver_level)
+            
+        parent_user.save()
+
+        is_same_user = request.user.pk == current_user.pk
+        if not is_same_user and (not request.user.is_superuser and not request.user.has_access("ADMIN,IT")):
+            request.user.invite_tokens = max(request.user.invite_tokens - 1, 0)
+            request.user.save()
+
+
     def distribute_joining_rewards(self, new_user):
         """
-        Optimized: Distribute joining rewards to up to 23 parent users using bulk_update.
-        
-        Args:
-            new_user (User): The newly joined user (who has a parent chain).
+            Distributes joining rewards to eligible parent users based on their achiever level.
+
+            Each parent receives a reward if:
+                - They are not a superuser.
+                - They are within the first 23 levels in the parent chain.
+                - Their achiever level qualifies them to earn at the current level.
+
+            Rewards are accumulated and updated in bulk for performance.
         """
+
         current_user = new_user.parent
         level = 1
         users_to_update = []
 
         while current_user and level <= 23:
             reward = JOINING_COMISSION.get(level)
-            if not current_user.wallet_balance:
-                current_user.wallet_balance = Decimal(0.00)
-            if reward:
+
+            # parentUser's ALevel is 0 make it 1, if none make it 1
+            current_user_achiver_level = current_user.achiver_level if (current_user.achiver_level and current_user.achiver_level != 0) else 1
+            # Get the max level this user is eligible for based on their achiver_level
+            max_level = ACHIVER_LEVELS.get(current_user_achiver_level)
+
+            # Only give reward if user is eligible
+            if reward and level <= max_level:
+                if not current_user.wallet_balance:
+                    current_user.wallet_balance = Decimal(0.00)
                 current_user.wallet_balance += Decimal(reward)
                 users_to_update.append(current_user)
+
             current_user = current_user.parent
             level += 1
 
@@ -157,6 +205,13 @@ class InviteUser(APIView):
 
     @swagger_auto_schema(**get_swagger_api_details("user_invite_post"))
     def post(self, request):
+
+        if not request.user.has_access("ADMIN,IT") and int(request.user.invite_tokens) <= 0:
+            return Response({
+                "status": 400,
+                "message": "You have no joining pins left. Please contact admin to get more pins.",
+                "logout": True
+            })
 
         serializer = InviteUserSerializer(data=request.data)
         joining_level_of_parent_user = None
@@ -171,18 +226,34 @@ class InviteUser(APIView):
                 }
             })
         joining_level_of_parent_user = parent_user.joining_level if parent_user.joining_level else 0
+
         if serializer.is_valid():
             cleaned_data = serializer.validated_data
+
             uc = UserController()
 
             # adding the joining level of the new user => joining_level_of_parent_user + 1
             cleaned_data["joining_level"] = joining_level_of_parent_user + 1
 
+            if 'password' in cleaned_data:
+
+                cleaned_data["password"] = make_password(cleaned_data["password"])
+
             user_add = uc.invite_user(cleaned_data)
             
+            if request.user.is_superuser or request.user.has_access("ADMIN,IT"):
+                if parent_user.achiver_level < 5:
+                    parent_user.achiver_level += 1
+                    parent_user.save()
+            else:
+                if request.user.achiver_level < 5:
+                    request.user.achiver_level += 1
+                    request.user.invite_tokens = max(request.user.invite_tokens - 1, 0)
+                    request.user.save()
 
             if not user_add['error']:
                 self.distribute_joining_rewards(user_add["user"])
+
                 return Response({
                     "status": 200,
                     "message": user_add["message"],
@@ -201,9 +272,7 @@ class InviteUser(APIView):
                 }
             )
         
-@method_decorator(access_limited_to('ADMIN,IT'), name='dispatch')
 class UserDetailsUpdateView(APIView):
-    serializer_class = UserDetailUpdateSerializer
     
     @swagger_auto_schema(**get_swagger_api_details("user_details_get"))
     def get(self, request, pk):
@@ -219,7 +288,7 @@ class UserDetailsUpdateView(APIView):
         try:
             return Response({
                 "status": 200,
-                "user": self.serializer_class(user_details["user"]).data
+                "user": UserSerializer(user_details["user"]).data
             })
         except User.DoesNotExist:
             return Response({"status": 400, "error": {
@@ -234,14 +303,21 @@ class UserDetailsUpdateView(APIView):
             return Response({"status": 400, "error": {
                 "pk": "Primary Key (pk) is required to update user details."
             }})
-        serializer = self.serializer_class(data=request.data, instance=user, partial=True)
+        serializer = UserUpdateSerializer(data=request.data, instance=user, partial=True)
         if serializer.is_valid():
             cleaned_data = serializer.validated_data
+            if 'password' in cleaned_data:
+                cleaned_data["password"] = make_password(cleaned_data["password"])
+                print(cleaned_data)
 
             uc = UserController()
             user_update = uc.update_user(pk, cleaned_data)
 
             if not user_update['error']:
+            
+                # need to expire the user_token if user is updated
+                token, created = Token.objects.get_or_create(user=user)
+                token.delete()
 
                 return Response({
                     "status": 200,

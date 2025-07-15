@@ -1,6 +1,6 @@
 from drf_yasg import openapi
 
-from .serializers import UserCreateSerializer, InviteUserSerializer, UserDetailUpdateSerializer
+from .serializers import UserCreateSerializer, InviteUserSerializer, UserUpdateSerializer
 
 
 api_details = {
@@ -88,7 +88,7 @@ api_details = {
         "manual_parameters":[
             openapi.Parameter("pk", openapi.IN_QUERY,required=True, type=openapi.TYPE_STRING, description="Need to pass user:id.",),
         ],
-        "request_body" : UserDetailUpdateSerializer
+        "request_body" : UserUpdateSerializer
 
     },
 }

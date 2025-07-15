@@ -13,6 +13,7 @@ class Products(models.Model):
     sell_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     offer_price=models.DecimalField(max_digits=10, decimal_places=2, default=0.00, help_text="Offer Price is the price after discount")
     bv_price=models.IntegerField(default=0, help_text="Business Value Price") # (sell_price - buy_price)*100/25
+    is_joining_package=models.BooleanField(default=False, help_text="Is this product a joining package?")
 
     stock=models.IntegerField(default=1)
 

@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from django.contrib.auth.hashers import make_password
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 
@@ -31,6 +30,7 @@ class UserListSerializer(serializers.ModelSerializer):
             "wallet_balance",
             "joining_level",
             "achiver_level",
+            "invite_tokens",
         ]
 
 
@@ -58,9 +58,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
         'roles': {'required': True},
         'is_active': {'required': True,},
         }
-
-    def validate_password(self, value):
-        return make_password(value)
     
     def validate_email(self, value):
         try:
@@ -105,6 +102,7 @@ class InviteUserSerializer(serializers.ModelSerializer):
             'address',
             'zip_code',
             'parent',
+            "invite_tokens",
             'is_active'
         ]
         extra_kwargs = {
@@ -119,7 +117,8 @@ class InviteUserSerializer(serializers.ModelSerializer):
             'zip_code': {'required': True},
             'parent': {'required': True},
             'contact2': {'required': False},
-            'is_active': {'required': False, 'default': True},
+            'is_active': {'required': False},
+            'invite_tokens': {'required': True}
         }
 
     def validate(self, data):
@@ -128,15 +127,14 @@ class InviteUserSerializer(serializers.ModelSerializer):
 
         if password != confirm_password:
             raise serializers.ValidationError({"password": "Passwords do not match.", "confirm_password": "Passwords do not match."})
+        
+        if data.get('invite_tokens') < 0:
+            raise serializers.ValidationError({"invite_tokens": "Invite tokens cannot be negative."})
 
         return data
 
-    def create(self, validated_data):
-        validated_data['password'] = make_password(validated_data['password'])
-        return super().create(validated_data)
 
-
-class UserDetailUpdateSerializer(serializers.ModelSerializer):
+class UserUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
@@ -151,6 +149,9 @@ class UserDetailUpdateSerializer(serializers.ModelSerializer):
             'address',
             'zip_code',
             'is_active',
+            "invite_tokens",
+            "password",
+            
         ]
         extra_kwargs = {
             'full_name': {'required': True},
@@ -162,4 +163,11 @@ class UserDetailUpdateSerializer(serializers.ModelSerializer):
             'address': {'required': True},
             'zip_code': {'required': True},
             'contact2': {'required': False},
+            'invite_tokens': {'required': True},
+            'password': {'required': False},
         }
+
+    def validate_invite_tokens(self, value):
+        if value < 0:
+            raise serializers.ValidationError("Invite tokens cannot be negative.")
+        return value

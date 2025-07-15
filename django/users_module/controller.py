@@ -6,11 +6,17 @@ class UserController:
     def __init__(self, user = None):
         self.obj = user
     
-    def user_list_filter(self, filter={}):
+    def user_list_filter(self, request, filter={}):
         fake_id = filter.get("id", None)
         if fake_id:
             fake_id = fake_id[7:] if len(fake_id) >= 8 else ""
             filter["id"] = fake_id
+        
+        logged_in_user = request.user
+
+        if not logged_in_user.has_access("ADMIN,IT"):
+            filter["parent_id"] = logged_in_user.id
+
         try:
             users = User.objects.filter(**filter).order_by("-id")
             return {"error": False, "user_list": users, "message":""}

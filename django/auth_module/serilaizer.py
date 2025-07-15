@@ -29,15 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.User
-        fields = [
-            "email",
-            "contact1",
-            "is_staff",
-            "is_active",
-            "is_superuser",
-            "roles",
-            "full_name"
-        ]
+        exclude = ["password"]
 
 
 

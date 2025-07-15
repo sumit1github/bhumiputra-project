@@ -9,6 +9,7 @@ import {
 
 import AdminLayout from "../IT-Dashboard/AdminLayout";
 import { productUpdate, productDetailsApiCall } from "./product_calls";
+import { Checkbox } from "../../common_components/form_component/Checkbox";
 
 export const ProductUpdate = () => {
   const [formErrors, setFormErrors] = useState({});
@@ -22,6 +23,7 @@ export const ProductUpdate = () => {
     buy_price: 0,
     sell_price: 0,
     stock: 1,
+    is_joining_package: false,
   });
 
   // -------------- Loading Product Details from API ----------------
@@ -48,6 +50,7 @@ export const ProductUpdate = () => {
         buy_price: product_detaildata.product.buy_price,
         sell_price: product_detaildata.product.sell_price,
         stock: product_detaildata.product.stock,
+        is_joining_package: product_detaildata.product.is_joining_package || false
       }));
     }
   }, [product_detaildata]);
@@ -61,11 +64,11 @@ export const ProductUpdate = () => {
   } = productUpdate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === 'checkbox' ? checked : value
+    });
   };
 
   const handleSubmit = (e) => {
@@ -102,7 +105,7 @@ export const ProductUpdate = () => {
           <div className="main-container">
 
             <div className="form-header">
-              <h2><FaUserPlus className="me-3" />Product Management</h2>
+              <h2>Product Management</h2>
               <p className="subtitle">Update Product</p>
             </div>
 
@@ -166,6 +169,20 @@ export const ProductUpdate = () => {
                         {formErrors.stock && <div className="text-danger">{formErrors.stock}</div>}
                       </div>
                     </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Is joining package?</label>
+                        <div className="d-flex align-items-center mt-2">
+                          <Checkbox
+                            name="is_joining_package"
+                            id="is_joining_package"
+                            value={formData.is_joining_package}
+                            onchangeFunction={handleChange}
+                          />
+                        </div>
+                        <div className="hint-text">For Joining Package</div>
+                      </div>
+                    </div>
 
                   </div>
                 </div>
@@ -174,7 +191,7 @@ export const ProductUpdate = () => {
                 {/* Submit Button */}
                 <div className="text-center mt-4">
                   <button type="submit" className="submit-btn">
-                    <FaUserPlus className="me-2" />Update Product
+                    Update Product
                   </button>
                 </div>
               </form>

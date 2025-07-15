@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router";
 import { toast } from 'react-toastify';
 import {
   FaUserPlus,
@@ -8,6 +8,8 @@ import {
   FaLock,
   FaPhone
 } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
+
 
 import { Checkbox } from "../../common_components/form_component/Checkbox";
 
@@ -17,6 +19,7 @@ import "./UserAdd.css";
 import AdminLayout from "../IT-Dashboard/AdminLayout";
 
 const UserAdd = () => {
+  const userData = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const parent = searchParams.get("parent");
@@ -44,6 +47,7 @@ const UserAdd = () => {
     zip_code: '',
     parent: parent || '',
     is_active: false,
+    invite_tokens: 0,
   });
 
   const handleChange = (e) => {
@@ -77,7 +81,16 @@ const UserAdd = () => {
 
         } else if (data?.status === 400 && data?.error) {
 
-          setFormErrors(data.error); // field-level errors
+          if (data?.error) {
+            setFormErrors(data.error); // field-level errors
+          }
+
+          if (data?.message && data?.logout) {
+            toast.error(data.message); // general error message
+            localStorage.removeItem("accessToken");
+            navigate("/login");
+          }
+
         }
       },
 
@@ -92,6 +105,14 @@ const UserAdd = () => {
     });
   };
 
+  useEffect(() => {
+    if (!userData?.user?.roles?.includes('ADMIN') && !userData?.user?.roles?.includes('IT')) {
+      if (userData?.user?.invite_tokens <= 0) {
+        toast.error("You don't have enough Join-Pins to add a user.");
+        navigate("/users");
+      }
+    }
+  }, [userData])
 
 
   return (
@@ -241,15 +262,26 @@ const UserAdd = () => {
                 <div className="form-section">
                   <h3 className="section-title">Additional Information</h3>
                   <div className="row">
-                    <div className="col-md-6">
+
+                    <div className="col-md-4">
                       <div className="form-group parent-info">
-                        <label className="form-label">Parent User ID <span className="required">*</span></label>
-                        <input id="parent" name="parent" value={formData.parent} onChange={handleChange} className="form-control" placeholder="e.g. 123" readOnly={parent ? parent : ""} />
+                        <label className="form-label">Parent User ID <span className="required">*</span><span style={{ color: "green" }}> (Parent Name: {parent_name || ""})</span></label>
+                        <input id="parent" name="parent" value={formData.parent} onChange={handleChange} className="form-control" placeholder="e.g. 123" readOnly={true} />
                         {formErrors.parent && <div className="text-danger">{formErrors.parent}</div>}
                         <div className="hint-text">Parent Name will be displayed based on ID</div>
                       </div>
                     </div>
-                    <div className="col-md-6">
+
+                    <div className="col-md-4">
+                      <div className="form-group">
+                        <label className="form-label">Invite Tokens <span className="required">*</span></label>
+                        <input id="invite_tokens" name="invite_tokens" value={formData.invite_tokens} onChange={handleChange} className="form-control" />
+                      </div>
+                      {formErrors.invite_tokens && <div className="text-danger">{formErrors.invite_tokens}</div>}
+
+                    </div>
+
+                    <div className="col-md-4">
                       <div className="form-group">
                         <label className="form-label">Account Status</label>
                         <div className="d-flex align-items-center mt-2">
@@ -263,6 +295,7 @@ const UserAdd = () => {
                         <div className="hint-text">Account needs to be active for login</div>
                       </div>
                     </div>
+
                   </div>
                 </div>
 

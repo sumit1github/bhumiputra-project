@@ -37,6 +37,7 @@ const UserUpdate = () => {
     "address": "",
     "zip_code": "",
     "is_active": false,
+    "invite_tokens": 0,
   });
 
   // -------------Loading User Details from API----------------
@@ -68,6 +69,7 @@ const UserUpdate = () => {
         address: user_detaildata.user.address?.trim() || "",
         zip_code: user_detaildata.user.zip_code?.trim() || "",
         is_active: user_detaildata.user.is_active || false,
+        invite_tokens: user_detaildata.user.invite_tokens || 0
       };
       console.log("User Details:", sanitizedData);
       setFormData(sanitizedData);
@@ -260,22 +262,34 @@ const UserUpdate = () => {
 
                 {/* Additional Information Section */}
                 <div className="form-section">
-                  <h3 className="section-title">Additional Information</h3>
-                  <div className="row">
+                  <div className="form-section">
+                    <h3 className="section-title">Additional Information</h3>
+                    <div className="row">
 
-                    <div className="col-md-6">
-                      <div className="form-group">
-                        <label className="form-label">Account Status</label>
-                        <div className="d-flex align-items-center mt-2">
-                          <Checkbox
-                            name="is_active"
-                            id="is_active"
-                            value={formData.is_active}
-                            onchangeFunction={handleChange}
-                          />
+                      <div className="col-md-4">
+                        <div className="form-group">
+                          <label className="form-label">Invite Tokens <span className="required">*</span></label>
+                          <input id="invite_tokens" name="invite_tokens" value={formData.invite_tokens} onChange={handleChange} className="form-control" />
                         </div>
-                        <div className="hint-text">Account needs to be active for login</div>
+                        {formErrors.invite_tokens && <div className="text-danger">{formErrors.invite_tokens}</div>}
+
                       </div>
+
+                      <div className="col-md-4">
+                        <div className="form-group">
+                          <label className="form-label">Account Status</label>
+                          <div className="d-flex align-items-center mt-2">
+                            <Checkbox
+                              name="is_active"
+                              id="is_active"
+                              value={formData.is_active}
+                              onchangeFunction={handleChange}
+                            />
+                          </div>
+                          <div className="hint-text">Account needs to be active for login</div>
+                        </div>
+                      </div>
+
                     </div>
                   </div>
                 </div>

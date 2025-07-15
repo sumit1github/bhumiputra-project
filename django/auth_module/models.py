@@ -13,7 +13,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(null=True,blank=True,unique=True)
     contact1 = models.CharField(max_length=255, null= True, blank= True, unique= True)
     contact2 = models.CharField(max_length=255, null= True, blank= True)
-    role = models.TextField() # comma separated values
+    role = models.TextField(default="USER") # comma separated values
     token= models.TextField(null=True, blank=True)
 
     is_staff = models.BooleanField(default=False)
@@ -32,18 +32,35 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     # meta data
     joining_level = models.PositiveBigIntegerField(null=True, blank=True)
-    achiver_level = models.PositiveBigIntegerField(null=True, blank=True)
+    achiver_level = models.PositiveBigIntegerField(null=True, blank=True, default=0)
 
     # wallet
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children' )
     wallet_balance = models.DecimalField(max_digits=10, decimal_places=2, default=0.00, null=True, blank=True)
+    invite_tokens = models.PositiveIntegerField(default=0, null=True, blank=True) # if invite tokens = 5, user can invite 5 users only
+
+    invitation_chain_meta_list = models.JSONField(null=True, blank = True)
 
     USERNAME_FIELD = "email"	
     REQUIRED_FIELDS = ["password","contact1"]
     
 
     objects = MyAccountManager()
-    
+
+    def get_user_invite_hierarchy_dict(self):
+        user=self.parent
+        H_dict = {}
+        while user != None:
+
+            if not user.is_superuser:
+                H_dict["user"] = user.id
+            else:
+                H_dict['admin'] = user.id
+
+            user = user.parent
+        
+        return H_dict
+
     def save(self, *args, **kwargs):
         td = GetDateTime()
         if self.dob:
@@ -52,6 +69,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         if not self.id_prefix:
             # Generate a unique ID prefix if not provided
             self.id_prefix = f"BP{str(generate_unique_id(5))}"
+        
+        if not self.invitation_chain_meta_list:
+            self.invitation_chain_meta_list = self.get_user_invite_hierarchy_dict()
         
         super(User, self).save(*args, **kwargs)
     
@@ -118,6 +138,4 @@ class User(AbstractBaseUser, PermissionsMixin):
             # ALL permissions must be there
             perms = [perm.strip().lower() for perm in permissions.split(' ')]
             return all(perm in user_role for perm in perms)
-
-
 

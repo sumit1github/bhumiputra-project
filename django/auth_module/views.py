@@ -95,7 +95,8 @@ class LogOut(APIView):
     )
 
     def get(self, request):
-        Token.objects.get_or_create(user= request.user).delete()
+        token, created = Token.objects.get_or_create(user=request.user)
+        token.delete()
         return Response({
             "status":200,
             "message":"Logout Successful",

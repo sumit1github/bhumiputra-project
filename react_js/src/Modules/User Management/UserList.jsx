@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
 import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate } from "react-router";
+import { useSelector } from 'react-redux';
 
 import { getUserList, UserSearchApiCall } from "./auth_calls";
 import { TableLayout } from "../../common_components/Table/Table";
@@ -11,6 +12,7 @@ import "./UserList.css";
 import AdminLayout from "../IT-Dashboard/AdminLayout";
 
 const UserList = () => {
+  const userData = useSelector((state) => state.user);
   const navigate = useNavigate();
   const [userLIst, setUserLIst] = useState([]);
   const [reload_page, setReloadPage] = useState(0); // State to trigger reload of user list
@@ -98,7 +100,7 @@ const UserList = () => {
           <div className="top-bar glass-effect fade-in-up">
             <h2 className="page-title">All User List</h2>
             <button className="btn btn-mars"
-              onClick={() => navigate("/users/add")}
+              onClick={() => navigate(`/users/add?parent=${userData?.user?.id}&name=${userData?.user?.full_name}`)}
             >
               <FaPlus className="me-2" />
               Add User
@@ -151,17 +153,20 @@ const UserList = () => {
               <tr key={user.id}>
                 <td className="id-column">{user.id_prefix || "BP25698"}{user.id}</td>
                 <td className="name-column">{user.full_name}</td>
-                <td className="email-column">{user.email}</td>
-                <td className="contact-column">{user.contact1}</td>
+                <td className="email-column">{!userData?.user?.roles?.includes('ADMIN') ? "**********" : user.email}</td>
+                <td className="contact-column">{!userData?.user?.roles?.includes('ADMIN') ? "**********" : user.contact1}</td>
                 <td><span className="level-badge">{user.joining_level}</span></td>
                 <td><span className="level-badge">{user.achiver_level}</span></td>
                 <td><span className="balance-amount">{user.wallet_balance}</span></td>
 
                 <td>
                   <div className="action-buttons">
-                    <button onClick={() => navigate(`/users/update/${user.id}`)} className="btn-action btn-edit">
-                      <FaEdit />
-                    </button>
+                    {userData?.user?.roles?.includes('ADMIN') && (
+                      <button onClick={() => navigate(`/users/update/${user.id}`)} className="btn-action btn-edit">
+                        <FaEdit />
+                      </button>
+                    )}
+
                     <button onClick={() => navigate(`/users/add?parent=${user.id}&name=${user.full_name}`)} className="btn-action btn-delete">
                       <IoMdPersonAdd />
                     </button>

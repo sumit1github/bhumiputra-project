@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'rest_framework.authtoken',
-    # 'whitenoise.runserver_nostatic',
 
     'auth_module',
     'users_module',
@@ -58,7 +57,6 @@ MIDDLEWARE = [
 
     'corsheaders.middleware.CorsMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    # 'common.middleware.custom_exception_handler.GlobalExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'project.urls'
@@ -108,8 +106,6 @@ ASGI_APPLICATION = 'project.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# for neon db only
-tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 
 DATABASES = {
    'default': {
@@ -122,16 +118,7 @@ DATABASES = {
    }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': tmpPostgres.path.replace('/', ''),
-#         'USER': tmpPostgres.username,
-#         'PASSWORD': tmpPostgres.password,
-#         'HOST': tmpPostgres.hostname,
-#         'PORT': 5432,
-#     }
-# }
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -166,7 +153,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+
+if not DEBUG:
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -177,10 +172,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #cache setting for lightweight cache
 # using file based cache
 # for production, you can use redis or memcached
+cache_location = os.environ.get('DJANGO_CACHE_LOCATION', '/tmp/django_cache')
+if not os.path.isabs(cache_location):
+    cache_location = os.path.join(BASE_DIR, cache_location)
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.environ.get('DJANGO_CACHE_LOCATION', '/tmp/django_cache'),
+        'LOCATION': cache_location,
     }
 }
 

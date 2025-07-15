@@ -8,6 +8,7 @@ import {
 
 import AdminLayout from "../IT-Dashboard/AdminLayout";
 import { productCreate } from "./product_calls";
+import { Checkbox } from "../../common_components/form_component/Checkbox";
 
 export const ProductAdd = () => {
   const [formErrors, setFormErrors] = useState({});
@@ -22,6 +23,7 @@ export const ProductAdd = () => {
     buy_price: 0,
     sell_price: 0,
     stock: 1,
+    is_joining_package: false,
   });
 
 
@@ -77,7 +79,7 @@ export const ProductAdd = () => {
           <div className="main-container">
 
             <div className="form-header">
-              <h2><FaUserPlus className="me-3" />Product Management</h2>
+              <h2>Product Management</h2>
               <p className="subtitle">Add Product</p>
             </div>
 
@@ -141,6 +143,20 @@ export const ProductAdd = () => {
                         {formErrors.stock && <div className="text-danger">{formErrors.stock}</div>}
                       </div>
                     </div>
+                    <div className="col-md-6">
+                      <div className="form-group">
+                        <label className="form-label">Is joining package?</label>
+                        <div className="d-flex align-items-center mt-2">
+                          <Checkbox
+                            name="is_joining_package"
+                            id="is_joining_package"
+                            value={formData.is_joining_package}
+                            onchangeFunction={handleChange}
+                          />
+                        </div>
+                        <div className="hint-text">For Joining Package</div>
+                      </div>
+                    </div>
 
                   </div>
                 </div>
@@ -149,7 +165,7 @@ export const ProductAdd = () => {
                 {/* Submit Button */}
                 <div className="text-center mt-4">
                   <button type="submit" className="submit-btn">
-                    <FaUserPlus className="me-2" />Add Product
+                    Add Product
                   </button>
                 </div>
               </form>

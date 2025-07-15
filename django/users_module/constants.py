@@ -40,3 +40,11 @@ JOINING_COMISSION = {
     22: 0.2,
     23: 0.2
 }
+
+ACHIVER_LEVELS =ACHIVER_LEVELS = {
+    1: 3,   # eligible for rewards up to level 3
+    2: 6,   # eligible for rewards up to level 6
+    3: 9,   # eligible for rewards up to level 9
+    4: 14,  # eligible for rewards up to level 14
+    5: 23,  # eligible for rewards up to level 23
+}
