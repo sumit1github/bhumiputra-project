@@ -68,7 +68,11 @@ const AdminLayout = ({ children }) => {
       loadUserDetails(userData?.user?.id, {
         onSuccess: (data) => {
           console.log("User details loaded successfully:", data);
-          dispatch(loginSuccess(data.user)); // Update Redux state
+          // Update only the user data in Redux store, keeping the existing access_token
+          dispatch(loginSuccess({
+            access_token: userData.accessToken,
+            user: data.user
+          }));
         },
         onError: (error) => {
           console.error("Error loading user details:", error);
@@ -97,7 +101,7 @@ const AdminLayout = ({ children }) => {
 
           <div>
             <div className="d-flex flex-column align-items-center p-0 w-100 justify-content-center ">
-              <img src="/logo.png" alt="Profile_pic" className="person-image-2 border" />
+              <img src="/logo.png" alt="Profile_pic" className="person-image-2 border" style={{ marginBottom: "15px" }} />
               <div>
                 <div className="text-white text-center">{userData?.user?.id_prefix}{userData?.user?.id}</div>
                 <div className="text-white text-sm text-center">{userData?.user?.full_name}</div>

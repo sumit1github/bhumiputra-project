@@ -144,7 +144,7 @@ const UserList = () => {
 
           <TableLayout
             is_loading={isLoading}
-            columns={["ID", "Full Name", "Email", "contact1", "J-Level", "A-Level", "wallet_balance", "Actions"]}
+            columns={["ID", "Full Name", "Email", "contact1", "A-Level", "wallet_balance", "Actions"]}
             data={data}
             is_error={isError}
             error={error}
@@ -155,7 +155,6 @@ const UserList = () => {
                 <td className="name-column">{user.full_name}</td>
                 <td className="email-column">{!userData?.user?.roles?.includes('ADMIN') ? "**********" : user.email}</td>
                 <td className="contact-column">{!userData?.user?.roles?.includes('ADMIN') ? "**********" : user.contact1}</td>
-                <td><span className="level-badge">{user.joining_level}</span></td>
                 <td><span className="level-badge">{user.achiver_level}</span></td>
                 <td><span className="balance-amount">{user.wallet_balance}</span></td>
 
