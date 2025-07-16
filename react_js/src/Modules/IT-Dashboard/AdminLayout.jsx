@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { CgClose, CgProfile } from "react-icons/cg";
-import { FaBox, FaRegEdit, FaTachometerAlt, FaUsers } from "react-icons/fa";
+import { CgClose } from "react-icons/cg";
+import { FaBox, FaTachometerAlt, FaUsers } from "react-icons/fa";
 import { IoMdRefresh, IoMdWallet } from "react-icons/io";
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
-
-
 
 
 import {
@@ -99,19 +97,22 @@ const AdminLayout = ({ children }) => {
 
           <div>
             <div className="d-flex flex-column align-items-center p-0 w-100 justify-content-center ">
-              <img
-                src="/logo.png"
-                alt="Profile_pic"
-                className="person-image-2 border"
-              />
+              <img src="/logo.png" alt="Profile_pic" className="person-image-2 border" />
               <div>
                 <div className="text-white text-center">{userData?.user?.id_prefix}{userData?.user?.id}</div>
                 <div className="text-white text-sm text-center">{userData?.user?.full_name}</div>
                 <div className="text-white text-sm ">{userData?.user?.email}</div>
               </div>
               <div className="d-flex gap-4 align-items-center p-3">
-                <IoMdWallet size={24} title="Profile" style={{ color: "aliceblue" }} />
-                <IoMdRefresh size={24} title="Refresh Profile" style={{ color: "aliceblue" }} onClick={refreshUserDetails} />
+                {!userData?.user?.roles?.includes('ADMIN') && (
+                  <>
+                    <div className="d-flex align-items-center gap-2">
+                      <IoMdWallet size={24} title="Profile" style={{ color: "aliceblue" }} />
+                      <span className="text-white small">₹{userData?.user?.wallet_balance || '0.00'}</span>
+                    </div>
+                    <IoMdRefresh size={24} title="Refresh Profile" style={{ color: "aliceblue" }} onClick={refreshUserDetails} />
+                  </>
+                )}
                 <MdExitToApp size={26} title="Logout" onClick={handleLogout} style={{ color: "aliceblue" }} />
               </div>
 
@@ -123,14 +124,14 @@ const AdminLayout = ({ children }) => {
               <ul className="nav side_nav nav-pills  flex-column mb-auto">
 
                 {/* Dash-board */}
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated`}>
                     <div className="d-flex align-items-center pointer gap-4 flex-grow-1">
                       <FaTachometerAlt className="text-white" />
                       <span onClick={() => handleNavigation('/dashboard')}>Dashboard</span>
                     </div>
                   </div>
-                </li>
+                </li> */}
 
                 {/* Users */}
                 <li className="nav-item">
@@ -170,21 +171,47 @@ const AdminLayout = ({ children }) => {
       </div>
 
       <div
-        className={`main-content fixed-top ${sidebarOpen ? "with-sidebar" : ""
-          }`}
+        className={`main-content ${sidebarOpen ? "with-sidebar" : ""}`}
+        style={{
+          marginLeft: sidebarOpen ? '280px' : '0px',
+          transition: 'margin-left 0.3s ease',
+          width: sidebarOpen ? 'calc(100% - 280px)' : '100%',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
       >
-        <div className="border header d-flex align-items-center  justify-content-center">
-
+        <div className="border header d-flex align-items-center justify-content-between px-3" style={{ flexShrink: 0 }}>
           <img src="/logo.png" alt="Logo" className="person-image-3" />
+
+          {/* Progress Bar Section */}
+          {!userData?.user?.roles?.includes('ADMIN') && (
+            <div className="d-flex align-items-center gap-3 ms-auto pe-3">
+              <div className="d-flex align-items-center gap-2">
+                <span className="level-progress-label">Level</span>
+                <div className="progress-container">
+                  <div className="progress-bar">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${((userData?.user?.achiver_level || 0) / 5) * 100}%` }}
+                    ></div>
+                  </div>
+                  <span className="progress-text">
+                    {userData?.user?.achiver_level || 0}/5
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
 
         </div>
         <div
           className="dashboard-container"
+          style={{ flex: 1, overflow: 'auto' }}
           onClick={() => {
             window.innerWidth < 776 && setSidebarOpen(false);
           }}
         >
-
           {children}
         </div>
       </div>

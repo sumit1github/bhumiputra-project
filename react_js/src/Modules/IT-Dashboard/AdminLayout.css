@@ -88,6 +88,9 @@
     background-size: cover;
     border-radius: 50%;
     aspect-ratio: 1/1;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
   }
 }
 
@@ -225,13 +228,172 @@
 }
 
 .dashboard-container {
-  max-height: 865px;
-  overflow: auto;
+  height: calc(100vh - 4rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 2rem;
+  /* Remove scroll-behavior: smooth as it can cause issues */
+  scroll-behavior: auto;
+  /* Ensure proper scroll restoration */
+  overscroll-behavior: contain;
+  /* Prevent momentum scrolling issues */
+  -webkit-overflow-scrolling: touch;
+  /* Force hardware acceleration */
+  transform: translateZ(0);
+  will-change: scroll-position;
 }
 
+/* Fix for potential webkit scrolling issues */
+.dashboard-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dashboard-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.dashboard-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.dashboard-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Progress Bar Styles */
+.level-progress-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 8px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 12px;
+  border: 1px solid #dee2e6;
+  position: relative;
+  overflow: hidden;
+}
+
+.level-progress-label::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(145, 39, 18, 0.1) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.level-progress-label:hover::before {
+  opacity: 1;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-bar {
+  width: 100px;
+  height: 8px;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #912712 0%, #B8441F 50%, #D2691E 100%);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  position: relative;
+  box-shadow: 0 1px 2px rgba(145, 39, 18, 0.2);
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.progress-text {
+  font-size: 12px;
+  font-weight: 700;
+  color: #495057;
+  min-width: 30px;
+  background: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
+  .level-progress-label {
+    font-size: 11px;
+    padding: 3px 6px;
+    letter-spacing: 0.3px;
+  }
+
+  .progress-container {
+    gap: 4px;
+  }
+
+  .progress-bar {
+    width: 80px;
+    height: 6px;
+  }
+
+  .progress-text {
+    font-size: 10px;
+    padding: 1px 4px;
+  }
+
+  /* Additional mobile-specific improvements */
+  .main-layout {
+    height: 100vh;
+    overflow: hidden;
+  }
+
   .dashboard-container {
-    max-height: 813px;
-    overflow: auto;
+    height: calc(100vh - 4rem);
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-bottom: 2rem;
+    -webkit-overflow-scrolling: touch;
+    /* Smooth scrolling on iOS */
+  }
+
+  .sidebar-absolute-wrapper {
+    z-index: 1050;
+    /* Ensure sidebar is above content on mobile */
+  }
+
+  /* Prevent body scroll when sidebar is open on mobile */
+  body.sidebar-open {
+    overflow: hidden;
   }
 }
