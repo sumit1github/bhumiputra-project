@@ -1,7 +1,7 @@
 // store.js
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage
+import encryptedStorage from "./encryptedStorage"; // Use encrypted storage instead of default
 import { combineReducers } from "redux";
 
 import roomSlice from "./Slices/Room/RoomSlice";
@@ -13,10 +13,10 @@ const rootReducer = combineReducers({
   user: authSlice,
 });
 
-// Persist configuration
+// Persist configuration with encrypted storage
 const persistConfig = {
   key: "root",
-  storage,
+  storage: encryptedStorage, // Use encrypted storage
   whitelist: ["user"], // only persist 'user' slice (e.g., auth info)
 };
 

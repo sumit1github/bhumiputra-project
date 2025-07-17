@@ -1,7 +1,3 @@
 export const config = {
-    api_host: "https://thebhumiputra.com",
+    api_host: import.meta.env.VITE_API_HOST || "https://thebhumiputra.com",
 };
-
-// export const config = {
-//     api_host: "http://localhost:8000",
-// };
