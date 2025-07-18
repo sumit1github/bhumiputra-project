@@ -8,10 +8,11 @@ from .user_serializer import (
 from .profile import (
     ProfileDetailsSerializer,
 )
+from .team_serializer import TeamViewSerializer
 __all__ = [
     "UserListSerializer",
     "UserCreateSerializer",
     "ProfileDetailsSerializer",
     "InviteUserSerializer",
-    "UserUpdateSerializer"
+    "TeamViewSerializer"
 ]

@@ -1,0 +1,564 @@
+/* ViewTeam Component Styles - User-Centric Hierarchy */
+
+.team-view-container {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+}
+
+.team-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.08);
+}
+
+.team-header h2 {
+    color: #912712;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.search-input {
+    border-radius: 25px;
+    padding-left: 45px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: #912712;
+    box-shadow: 0 0 0 0.2rem rgba(145, 39, 18, 0.25);
+}
+
+.users-tree-container {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 0.5rem;
+}
+
+.user-tree-item {
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.user-card {
+    background: white;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.user-card.level-1 {
+    border-left: 5px solid #912712;
+    background: linear-gradient(135deg, #ffffff 0%, #fff8f6 100%);
+}
+
+.user-card.level-2 {
+    border-left: 5px solid #B8441F;
+    background: linear-gradient(135deg, #ffffff 0%, #fff9f7 100%);
+}
+
+.user-card.level-3 {
+    border-left: 5px solid #D2691E;
+    background: linear-gradient(135deg, #ffffff 0%, #fffaf8 100%);
+}
+
+.user-card.level-4 {
+    border-left: 5px solid #F4A460;
+    background: linear-gradient(135deg, #ffffff 0%, #fffbf9 100%);
+}
+
+.user-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(145, 39, 18, 0.15);
+    border-color: #912712;
+}
+
+.expand-toggle-btn {
+    border: none;
+    background: rgba(145, 39, 18, 0.1);
+    color: #912712;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.expand-toggle-btn:hover {
+    background: rgba(145, 39, 18, 0.2);
+    transform: scale(1.1);
+}
+
+.user-avatar {
+    background: linear-gradient(135deg, #912712 0%, #B8441F 100%);
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    box-shadow: 0 3px 10px rgba(145, 39, 18, 0.3);
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    color: #912712;
+    font-size: 1.1rem;
+}
+
+.user-details {
+    margin-top: 5px;
+}
+
+.user-details small {
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.user-stats {
+    min-width: 120px;
+}
+
+.level-badge {
+    background: linear-gradient(135deg, #912712 0%, #B8441F 100%);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.balance-amount {
+    font-weight: 700;
+    color: #912712;
+    font-size: 0.95rem;
+    margin-top: 5px;
+}
+
+.user-children {
+    margin-top: 15px;
+    padding-left: 10px;
+    border-left: 2px dashed #dee2e6;
+    position: relative;
+}
+
+.user-children::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, #912712, transparent);
+}
+
+.loading-container {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-pulse {
+    animation: pulse 2s infinite;
+}
+
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+/* Animation for expanding/collapsing */
+.user-children {
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        max-height: 1000px;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Custom scrollbar */
+.users-tree-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.users-tree-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.users-tree-container::-webkit-scrollbar-thumb {
+    background: #912712;
+    border-radius: 3px;
+}
+
+.users-tree-container::-webkit-scrollbar-thumb:hover {
+    background: #6B1C0E;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .team-header {
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .team-header .d-flex {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .team-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .user-card {
+        padding: 12px;
+        border-radius: 8px;
+        margin: 3px 0;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 0.85rem;
+        min-width: 40px;
+    }
+
+    .user-name {
+        font-size: 1rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .user-details small {
+        font-size: 0.75rem;
+        line-height: 1.3;
+    }
+
+    .level-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .balance-amount {
+        font-size: 0.85rem;
+    }
+
+    .user-stats {
+        min-width: 80px;
+    }
+
+    /* Optimize tree structure for mobile */
+    .user-tree-child {
+        margin-left: 25px;
+    }
+
+    .user-tree-child::before {
+        left: -15px;
+    }
+
+    .user-tree-child::after {
+        left: -15px;
+        width: 15px;
+    }
+
+    .search-input {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .team-view-container {
+        padding: 0.5rem !important;
+    }
+
+    .team-header {
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .team-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .user-card {
+        padding: 10px;
+        border-radius: 6px;
+    }
+
+    .user-card .d-flex {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start !important;
+    }
+
+    .user-card .d-flex.align-items-center {
+        flex-direction: row;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .user-card .justify-content-between {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .user-avatar {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+        margin-right: 8px !important;
+    }
+
+    .user-info {
+        width: 100%;
+    }
+
+    .user-name {
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .user-details {
+        margin-top: 3px;
+    }
+
+    .user-details small {
+        font-size: 0.7rem;
+        display: inline-block;
+        margin-right: 10px;
+        margin-bottom: 2px;
+    }
+
+    .user-stats {
+        min-width: auto;
+        text-align: left;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .level-badge {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.35rem;
+        margin-bottom: 0;
+    }
+
+    .balance-amount {
+        font-size: 0.8rem;
+        margin-top: 0;
+    }
+
+    /* Mobile tree optimization */
+    .user-tree-child {
+        margin-left: 15px;
+    }
+
+    .user-tree-child::before {
+        left: -10px;
+        width: 1px;
+        border-left: 1px solid #d1d5db;
+    }
+
+    .user-tree-child::after {
+        left: -10px;
+        width: 10px;
+        border-top: 1px solid #d1d5db;
+    }
+
+    .user-tree-node {
+        margin-bottom: 8px;
+    }
+
+    .expand-toggle-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.7rem;
+    }
+
+    /* Disable hover effects on mobile */
+    .user-card:hover {
+        transform: none;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .user-tree-child .user-card:hover {
+        transform: none;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 400px) {
+    .team-view-container {
+        padding: 0.25rem !important;
+    }
+
+    .user-card {
+        padding: 8px;
+        margin: 2px 0;
+    }
+
+    .user-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 0.75rem;
+    }
+
+    .user-name {
+        font-size: 0.9rem;
+    }
+
+    .user-details small {
+        font-size: 0.65rem;
+        margin-right: 8px;
+    }
+
+    .level-badge {
+        font-size: 0.6rem;
+        padding: 0.1rem 0.3rem;
+    }
+
+    .balance-amount {
+        font-size: 0.75rem;
+    }
+
+    .user-tree-child {
+        margin-left: 10px;
+    }
+
+    .user-tree-child::before {
+        left: -8px;
+    }
+
+    .user-tree-child::after {
+        left: -8px;
+        width: 8px;
+    }
+}
+
+/* Hover effects for better UX */
+.user-tree-item:hover .user-card {
+    border-color: #912712;
+}
+
+.user-tree-item:hover .expand-toggle-btn {
+    background: rgba(145, 39, 18, 0.15);
+}
+
+/* Card header styling */
+.card-header {
+    background: linear-gradient(135deg, #912712 0%, #B8441F 100%) !important;
+    color: white !important;
+}
+
+.card-header h5 {
+    color: white !important;
+}
+
+/* Tree structure styles for "L" shape hierarchy */
+.user-tree-node {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.user-tree-child {
+    margin-left: 40px;
+    /* Indent for nested children */
+}
+
+/* Vertical line for nested items */
+.user-tree-child::before {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: 0;
+    width: 2px;
+    height: 100%;
+    background-color: #d1d5db;
+    border-left: 2px solid #d1d5db;
+}
+
+/* Horizontal line for nested items creating the "L" shape */
+.user-tree-child::after {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    /* Connect to middle of card height */
+    width: 20px;
+    height: 2px;
+    background-color: #d1d5db;
+    border-top: 2px solid #d1d5db;
+    transform: translateY(-1px);
+    /* Center the line itself */
+}
+
+/* Remove vertical line continuation for last child */
+.user-tree-child:last-child::before {
+    height: 50%;
+    /* Only show line up to the middle connector */
+}
+
+/* Optional: Add some styling to make the tree more visually appealing */
+.nested-users {
+    position: relative;
+}
+
+/* Enhanced user card styling for better tree visualization */
+.user-tree-child .user-card {
+    border-left: 3px solid #007bff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.user-tree-child .user-card:hover {
+    border-left-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateX(2px);
+}

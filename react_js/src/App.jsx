@@ -12,6 +12,7 @@ import UserUpdate from "./Modules/User Management/UserUpdate";
 import { ProductList } from "./Modules/ProductManagement/ProductList";
 import { ProductUpdate } from "./Modules/ProductManagement/ProductUpdate";
 import { ProductAdd } from "./Modules/ProductManagement/ProductAdd";
+import { ViewTeam } from "./Modules/User Management/ViewTeam";
 
 function App() {
   return (
@@ -29,6 +30,8 @@ function App() {
         <Route path="products/add" element={<ProductAdd />} />
         <Route path="products/update/:product_id" element={<ProductUpdate />} />
 
+        {/* team view */}
+        <Route path="team/view" element={<ViewTeam />} />
 
       </Routes>
 

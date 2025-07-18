@@ -4,6 +4,7 @@ import { FaBox, FaTachometerAlt, FaUsers } from "react-icons/fa";
 import { IoMdRefresh, IoMdWallet } from "react-icons/io";
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
+import { BsMicrosoftTeams } from "react-icons/bs";
 
 
 import {
@@ -146,6 +147,19 @@ const AdminLayout = ({ children }) => {
                     </div>
                   </div>
                 </li>
+
+
+                {/* Team View */}
+                {!userData?.user?.roles?.includes('ADMIN') && (
+                  <li className="nav-item">
+                    <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/team') ? 'nav-link active' : ''}`}>
+                      <div className='d-flex align-items-center pointer gap-4 flex-grow-1 ' >
+                        <BsMicrosoftTeams className="text-white" />
+                        <span onClick={() => handleNavigation('/team/view')} className="text-decoration-none text-white">My Team</span>
+                      </div>
+                    </div>
+                  </li>
+                )}
 
                 {/* Products */}
 

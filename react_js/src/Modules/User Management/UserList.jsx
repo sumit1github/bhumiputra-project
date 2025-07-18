@@ -3,6 +3,7 @@ import { FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
 import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { useSelector } from 'react-redux';
+import { FaArrowsDownToPeople } from "react-icons/fa6";
 
 import { getUserList, UserSearchApiCall } from "./auth_calls";
 import { TableLayout } from "../../common_components/Table/Table";
@@ -169,6 +170,13 @@ const UserList = () => {
                     <button onClick={() => navigate(`/users/add?parent=${user.id}&name=${user.full_name}`)} className="btn-action btn-delete">
                       <IoMdPersonAdd />
                     </button>
+
+                    {userData?.user?.roles?.includes('ADMIN') && (
+                      <button title="Downline" onClick={() => navigate(`/team/view?parent=${user.id_prefix + user.id}&parent_name=${user.full_name}`)} className="btn-action btn-delete">
+                        <FaArrowsDownToPeople />
+                      </button>
+                    )}
+
                   </div>
                 </td>
               </tr>

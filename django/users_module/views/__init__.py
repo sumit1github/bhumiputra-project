@@ -1,11 +1,13 @@
 from .user_management import (
     UserFilter, 
     InviteUser,
-    UserDetailsUpdateView
+    UserDetailsUpdateView,
 )
+from .team import TeamView
 
 __all__ = [
     "UserFilter",
     "InviteUser",
-    "UserDetailsUpdateView"
+    "UserDetailsUpdateView",
+    "TeamView",
 ]

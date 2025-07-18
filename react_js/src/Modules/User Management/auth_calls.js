@@ -27,7 +27,7 @@ export const InviteUser = () => {
       const res = await apiClient.post("/users/invite_user", userData);
       return res.data;
     },
-    
+
   });
 };
 
@@ -45,8 +45,6 @@ export const UserDetailsApiCall = () => {
 export const UserUpdateApiCall = () => {
   return useMutation({
     mutationFn: async ({ user_id, formData }) => {
-      console.log("User Data:", formData);
-      console.log("User ID:", user_id);
       const res = await apiClient.post(`/users/detail_update_user/${user_id}`, formData);
       return res.data;
     },
@@ -56,10 +54,20 @@ export const UserUpdateApiCall = () => {
 // user search API call
 export const UserSearchApiCall = () => {
   return useMutation({
-    mutationFn: async ({search_by, query }) => {
+    mutationFn: async ({ search_by, query }) => {
       console.log("Search By:", search_by);
       console.log("Query:", query);
       const res = await apiClient.get(`/users/get_user_list?${search_by}=${query}`);
+      return res.data;
+    },
+  });
+};
+
+// get direct users of the user
+export const GetDirectUsersApiCall = () => {
+  return useMutation({
+    mutationFn: async (user_prefix_id) => {
+      const res = await apiClient.get(`users/team/${user_prefix_id}`);
       return res.data;
     },
   });
