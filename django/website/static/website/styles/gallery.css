@@ -1,0 +1,21 @@
+.mar {
+  padding-top: 60px;
+}
+
+.product-responsive-img {
+  max-height: 500px;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Mobile responsive product cards */
+@media (max-width: 767.98px) {
+  .products-section .col-md-4 {
+    margin-bottom: 2rem;
+  }
+
+  .product-responsive-img {
+    max-height: 300px;
+  }
+}

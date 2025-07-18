@@ -50,8 +50,7 @@ const Login = () => {
               Welcome to<br />Bhumiputra
             </div>
             <div className="hero-subtitle">
-              Your trusted partner for agricultural solutions and land management.
-              Join thousands of farmers who trust us with their agricultural needs.
+              A unit for commercial, economic, and social empowerment.
             </div>
             <div className="hero-features">
               <div className="feature-item">

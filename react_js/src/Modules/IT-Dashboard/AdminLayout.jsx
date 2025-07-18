@@ -182,6 +182,27 @@ const AdminLayout = ({ children }) => {
                     </li>
                   )}
 
+                {/* Products */}
+
+                {(
+                  userData?.user?.roles?.includes('ADMIN') ||
+                  userData?.user?.roles?.includes('IT')
+                ) && (
+                    <li className="nav-item">
+                      <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/products') ? 'nav-link active' : ''}`}>
+                        <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
+                          <FaBox className="text-white" />
+                          <span
+                            onClick={() => handleNavigation('/contact-submissions')}
+                            className="text-decoration-none text-white"
+                          >
+                            Messages
+                          </span>
+                        </div>
+                      </div>
+                    </li>
+                  )}
+
               </ul>
             </div>
           </div>

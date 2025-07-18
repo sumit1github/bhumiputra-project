@@ -13,6 +13,7 @@ import { ProductList } from "./Modules/ProductManagement/ProductList";
 import { ProductUpdate } from "./Modules/ProductManagement/ProductUpdate";
 import { ProductAdd } from "./Modules/ProductManagement/ProductAdd";
 import { ViewTeam } from "./Modules/User Management/ViewTeam";
+import { ContactSubmissionList } from "./Modules/ContactFormSubmission/ContactSubmissionList";
 
 function App() {
   return (
@@ -32,6 +33,9 @@ function App() {
 
         {/* team view */}
         <Route path="team/view" element={<ViewTeam />} />
+
+        {/* contact forms submission */}
+        <Route path="contact-submissions" element={<ContactSubmissionList />} />
 
       </Routes>
 

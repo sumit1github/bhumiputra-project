@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'users_module',
     'product_management',
     'common',
+    "website",
 
 ]
 

@@ -1,0 +1,447 @@
+/* Contact Form Submissions - Card-based Design */
+
+.contact-submissions-container {
+    --primary-color: #912712;
+    --primary-dark: #6B1C0E;
+    --primary-light: #B8441F;
+    --accent-color: #D2691E;
+    --light-bg: #F4A460;
+    --gradient: linear-gradient(135deg, #912712 0%, #B8441F 100%);
+    --gradient-light: linear-gradient(135deg, #F4A460 0%, #D2691E 100%);
+    --shadow: 0 4px 15px rgba(145, 39, 18, 0.1);
+    --shadow-hover: 0 8px 25px rgba(145, 39, 18, 0.15);
+
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    min-height: 100vh;
+    padding: 2rem 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header Section */
+.submissions-header {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding: 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+}
+
+.submissions-title {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.submissions-subtitle {
+    color: #6c757d;
+    font-size: 1.1rem;
+    margin: 0;
+    opacity: 0.8;
+}
+
+/* Search and Filter Card */
+.search-filter-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.search-filter-card:hover {
+    box-shadow: var(--shadow-hover);
+}
+
+.search-input-group .input-group-text {
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-right: none;
+    color: var(--primary-color);
+}
+
+.search-input {
+    border: 2px solid #e9ecef;
+    border-left: none;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(145, 39, 18, 0.15);
+    background: white;
+}
+
+.search-input-group .input-group-text:focus-within {
+    border-color: var(--primary-color);
+}
+
+.status-filter {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.status-filter:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(145, 39, 18, 0.15);
+}
+
+.results-count {
+    text-align: right;
+    font-weight: 500;
+}
+
+/* Submission Cards */
+.submission-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: white;
+    overflow: hidden;
+    position: relative;
+}
+
+.submission-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.submission-card-header {
+    background: var(--gradient);
+    color: white;
+    border: none;
+    padding: 1.25rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.submission-card-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='20' cy='20' r='1'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.3;
+}
+
+.user-avatar {
+    width: 45px;
+    height: 45px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.submission-card:hover .user-avatar {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.submission-name {
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Card Body */
+.submission-card-body {
+    padding: 1.5rem;
+    background: white;
+}
+
+.submission-subject {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.subject-icon {
+    color: var(--primary-color);
+    margin-right: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.subject-title {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.submission-message {
+    margin-bottom: 1rem;
+}
+
+.message-text {
+    color: #495057;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+    text-align: justify;
+}
+
+/* Card Footer */
+.submission-card-footer {
+    background: #f8f9fa;
+    border: none;
+    padding: 1rem 1.5rem;
+}
+
+.submission-date {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.view-details-btn {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.view-details-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(145, 39, 18, 0.3);
+}
+
+/* Empty State */
+.empty-state-card {
+    border: 2px dashed #dee2e6;
+    border-radius: 15px;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.empty-state-card:hover {
+    border-color: var(--primary-color);
+    background: rgba(145, 39, 18, 0.02);
+}
+
+/* Status Badge Variants */
+.status-badge.bg-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+}
+
+.status-badge.bg-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+    color: #212529 !important;
+}
+
+.status-badge.bg-success {
+    background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .submission-card-header {
+        padding: 1rem 1.25rem;
+    }
+
+    .submission-card-body {
+        padding: 1.25rem;
+    }
+
+    .submissions-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .contact-submissions-container {
+        padding: 1rem 0;
+    }
+
+    .submissions-header {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .submissions-title {
+        font-size: 1.8rem;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .submissions-subtitle {
+        font-size: 1rem;
+    }
+
+    .search-filter-card .row {
+        gap: 1rem;
+    }
+
+    .search-input-group,
+    .status-filter {
+        margin-bottom: 1rem;
+    }
+
+    .results-count {
+        text-align: left;
+        margin-top: 0.5rem;
+    }
+
+    .submission-card {
+        margin-bottom: 1.5rem;
+    }
+
+    .submission-card-header {
+        padding: 1rem;
+    }
+
+    .submission-card-body {
+        padding: 1rem;
+    }
+
+    .submission-card-footer {
+        padding: 0.75rem 1rem;
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+
+    .view-details-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .submissions-title {
+        font-size: 1.5rem;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+    .submission-name {
+        font-size: 0.9rem;
+    }
+
+    .subject-title {
+        font-size: 1rem;
+    }
+
+    .message-text {
+        font-size: 0.9rem;
+    }
+}
+
+/* Animation for cards */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.submission-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.submission-card:nth-child(even) {
+    animation-delay: 0.1s;
+}
+
+.submission-card:nth-child(3n) {
+    animation-delay: 0.2s;
+}
+
+/* Custom scrollbar */
+.contact-submissions-container ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.contact-submissions-container ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.contact-submissions-container ::-webkit-scrollbar-thumb {
+    background: var(--gradient);
+    border-radius: 4px;
+}
+
+.contact-submissions-container ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+/* Focus states for accessibility */
+.submission-card:focus-within {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+    .contact-submissions-container {
+        background: white;
+        padding: 0;
+    }
+
+    .search-filter-card {
+        display: none;
+    }
+
+    .submission-card {
+        box-shadow: none;
+        border: 1px solid #dee2e6;
+        break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+
+    .submission-card-header {
+        background: #f8f9fa !important;
+        color: #333 !important;
+    }
+
+    .view-details-btn {
+        display: none;
+    }
+}

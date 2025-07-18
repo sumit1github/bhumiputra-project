@@ -1,0 +1,50 @@
+{% extends 'website/starter.html' %}
+{% load static %}
+{% block page_title %}Gallery{% endblock page_title %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'website/styles/gallery.css' %}" />
+{% endblock css %}
+{% block content %}
+
+<!-- Gallery Heading -->
+<header class="text-center my-5 mar">
+  <h1 class="display-5">Our Gallery</h1>
+  <p class="lead text-muted">A glimpse into our impactful moments</p>
+</header>
+
+<!-- Gallery Content -->
+<!-- Gallery -->
+<div class="container" style="padding-bottom: 40px">
+  <div class="row">
+    <div class="col-lg-4 col-md-12 mb-4 mb-lg-0">
+      <img src="{% static 'website/images/products/product-2.jpg' %}" class="w-100 shadow-1-strong rounded mb-4"
+        alt="Boat on Calm Water" />
+
+      <img src="{% static 'website/images/products/product-2.jpg' %}" class="w-100 shadow-1-strong rounded mb-4"
+        alt="Wintry Mountain Landscape" />
+    </div>
+
+    <div class="col-lg-4 mb-4 mb-lg-0">
+      <img src="{% static 'website/images/products/product-2.jpg' %}" class="w-100 shadow-1-strong rounded mb-4"
+        alt="Mountains in the Clouds" />
+
+      <img src="{% static 'website/images/products/product-2.jpg' %}" class="w-100 shadow-1-strong rounded mb-4"
+        alt="Boat on Calm Water" />
+    </div>
+
+    <div class="col-lg-4 mb-4 mb-lg-0">
+      <img src="{% static 'website/images/products/product-2.jpg' %}" class="w-100 shadow-1-strong rounded mb-4"
+        alt="Waves at Sea" />
+
+      <img src="{% static 'website/images/products/product-2.jpg' %}" class="w-100 shadow-1-strong rounded mb-4"
+        alt="Yosemite National Park" />
+    </div>
+  </div>
+</div>
+<!-- Gallery -->
+{% endblock content %}
+{% block script %}
+<script src="{% static 'website/js/gallery.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+{% endblock script %}
