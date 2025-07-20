@@ -5,5 +5,3 @@ export const config = {
 // export const config = {
 //     api_host: "http://localhost:8000",
 // };
-
-

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Badge, Form } from 'react-bootstrap'
 import { BiUser, BiEnvelope, BiMessage } from 'react-icons/bi'
 import { toast } from 'react-toastify';
+import AdminLayout from "../IT-Dashboard/AdminLayout";
+
 
 import './ContactSubmissionList.css'
 
@@ -119,109 +121,112 @@ export const ContactSubmissionList = () => {
     }, [resolveData]);
 
     return (
-        <div className="contact-submissions-container">
-            <Container fluid>
-                {/* Header Section */}
-                <Row className="mb-4">
-                    <Col>
-                        <div className="submissions-header">
-                            <h2 className="submissions-title">
-                                <BiEnvelope className="me-2" />
-                                Contact Form Submissions
-                            </h2>
-                            <p className="submissions-subtitle">
-                                Manage and respond to customer inquiries
-                            </p>
-                        </div>
-                    </Col>
-                </Row>
+        <AdminLayout>
+            <div className="contact-submissions-container">
+                <Container fluid>
+                    {/* Header Section */}
+                    <Row className="mb-4">
+                        <Col>
+                            <div className="submissions-header">
+                                <h2 className="submissions-title">
+                                    <BiEnvelope className="me-2" />
+                                    Contact Form Submissions
+                                </h2>
+                                <p className="submissions-subtitle">
+                                    Manage and respond to customer inquiries
+                                </p>
+                            </div>
+                        </Col>
+                    </Row>
 
-                {/* Search and Filter Section */}
-                <Row className="mb-4">
-                    <Col lg={8} md={12}>
-                        <Card className="search-filter-card">
-                            <Card.Body>
-                                <Row className="align-items-center">
+                    {/* Search and Filter Section */}
+                    <Row className="mb-4">
+                        <Col lg={8} md={12}>
+                            <Card className="search-filter-card">
+                                <Card.Body>
+                                    <Row className="align-items-center">
 
-                                    <Col md={3}>
-                                        <Form.Select
-                                            value={filter}
-                                            onChange={(e) => setFilter(e.target.value)}
-                                            className="status-filter"
-                                        >
-                                            <option value="new">New</option>
-                                            <option value="resolved">Resolved</option>
-                                            <option value="today">Today</option>
-                                            <option value="yesterday">Yesterday</option>
-                                        </Form.Select>
-                                    </Col>
+                                        <Col md={3}>
+                                            <Form.Select
+                                                value={filter}
+                                                onChange={(e) => setFilter(e.target.value)}
+                                                className="status-filter"
+                                            >
+                                                <option value="new">New</option>
+                                                <option value="resolved">Resolved</option>
+                                                <option value="today">Today</option>
+                                                <option value="yesterday">Yesterday</option>
+                                            </Form.Select>
+                                        </Col>
 
-                                </Row>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                </Row>
-
-                {/* Submissions Cards Grid */}
-                <Row>
-                    {contacts.length > 0 ? (
-                        contacts.map((submission) => (
-                            <Col key={submission.id} lg={6} xl={4} className="mb-4">
-                                <Card className="submission-card h-100">
-                                    <Card.Header className="submission-card-header">
-                                        <div className="d-flex justify-content-between align-items-center">
-                                            <div className="d-flex align-items-center">
-                                                <div className="user-avatar">
-                                                    <BiUser size={20} />
-                                                </div>
-                                                <div className="ms-2">
-                                                    <h6 className="mb-0 submission-name">{submission.name}</h6>
-
-                                                </div>
-                                            </div>
-                                            {getStatusBadge(submission.status)}
-                                        </div>
-                                    </Card.Header>
-
-                                    <Card.Body className="submission-card-body">
-                                        <div className="submission-subject">
-                                            <BiMessage className="subject-icon" />
-                                            <h6 className="subject-title">{submission.subject}</h6>
-                                        </div>
-
-                                        <div className="submission-message">
-                                            <p className="message-text">
-                                                {submission.message}
-                                            </p>
-                                        </div>
-                                    </Card.Body>
-
-                                    <Card.Footer className="submission-card-footer">
-                                        <div className="d-flex justify-content-between align-items-center">
-                                            <small className="submission-date">
-                                                {formatDate(submission.created_at)}
-                                            </small>
-                                            <button className="btn btn-sm btn-outline-primary view-details-btn" onClick={() => handleResolve(submission.id)}>
-                                                Resolve Now
-                                            </button>
-                                        </div>
-                                    </Card.Footer>
-                                </Card>
-                            </Col>
-                        ))
-                    ) : (
-                        <Col xs={12}>
-                            <Card className="empty-state-card">
-                                <Card.Body className="text-center py-5">
-                                    <BiEnvelope size={64} className="text-muted mb-3" />
-                                    <h5 className="text-muted">No submissions found</h5>
-
+                                    </Row>
                                 </Card.Body>
                             </Card>
                         </Col>
-                    )}
-                </Row>
-            </Container>
-        </div>
+                    </Row>
+
+                    {/* Submissions Cards Grid */}
+                    <Row>
+                        {contacts.length > 0 ? (
+                            contacts.map((submission) => (
+                                <Col key={submission.id} lg={6} xl={4} className="mb-4">
+                                    <Card className="submission-card h-100">
+                                        <Card.Header className="submission-card-header">
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <div className="d-flex align-items-center">
+                                                    <div className="user-avatar">
+                                                        <BiUser size={20} />
+                                                    </div>
+                                                    <div className="ms-2">
+                                                        <h6 className="mb-0 submission-name">{submission.name}</h6>
+
+                                                    </div>
+                                                </div>
+                                                {getStatusBadge(submission.status)}
+                                            </div>
+                                        </Card.Header>
+
+                                        <Card.Body className="submission-card-body">
+                                            <div className="submission-subject">
+                                                <BiMessage className="subject-icon" />
+                                                <h6 className="subject-title">{submission.subject}</h6>
+                                            </div>
+
+                                            <div className="submission-message">
+                                                <p className="message-text">
+                                                    {submission.message}
+                                                </p>
+                                            </div>
+                                        </Card.Body>
+
+                                        <Card.Footer className="submission-card-footer">
+                                            <div className="d-flex justify-content-between align-items-center">
+                                                <small className="submission-date">
+                                                    {formatDate(submission.created_at)}
+                                                </small>
+                                                <button className="btn btn-sm btn-outline-primary view-details-btn" onClick={() => handleResolve(submission.id)}>
+                                                    Resolve Now
+                                                </button>
+                                            </div>
+                                        </Card.Footer>
+                                    </Card>
+                                </Col>
+                            ))
+                        ) : (
+                            <Col xs={12}>
+                                <Card className="empty-state-card">
+                                    <Card.Body className="text-center py-5">
+                                        <BiEnvelope size={64} className="text-muted mb-3" />
+                                        <h5 className="text-muted">No submissions found</h5>
+
+                                    </Card.Body>
+                                </Card>
+                            </Col>
+                        )}
+                    </Row>
+                </Container>
+            </div>
+        </AdminLayout>
+
     )
 }

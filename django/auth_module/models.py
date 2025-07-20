@@ -41,6 +41,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     invitation_chain_meta_list = models.JSONField(null=True, blank = True)
 
+    is_distributer = models.BooleanField(default=False, null=True, blank=True)
+
     USERNAME_FIELD = "email"	
     REQUIRED_FIELDS = ["password","contact1"]
     

@@ -31,6 +31,7 @@ class UserListSerializer(serializers.ModelSerializer):
             "joining_level",
             "achiver_level",
             "invite_tokens",
+            "is_distributer",
         ]
 
 
@@ -103,7 +104,8 @@ class InviteUserSerializer(serializers.ModelSerializer):
             'zip_code',
             'parent',
             "invite_tokens",
-            'is_active'
+            'is_active',
+            "is_distributer",
         ]
         extra_kwargs = {
             'full_name': {'required': True},
@@ -118,7 +120,8 @@ class InviteUserSerializer(serializers.ModelSerializer):
             'parent': {'required': True},
             'contact2': {'required': False},
             'is_active': {'required': False},
-            'invite_tokens': {'required': True}
+            'invite_tokens': {'required': True},
+            'is_distributer': {'required': False,}
         }
 
     def validate(self, data):

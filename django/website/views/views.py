@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.utils import timezone
+import json
 
 from ..forms import ContactFormForm
 from ..models import ContactForm
@@ -43,13 +44,13 @@ class ContactPOSTView(View):
     
     def post(self, request):
         if request.headers.get('Content-Type') == 'application/json':
-            import json
+            
             data = json.loads(request.body)
-            form = ContactForm(data)
+            form = ContactFormForm(data)
         else:
-            form = ContactForm(request.POST)
+            form = ContactFormForm(request.POST)
         
-        if form.is_valid():
+        if form and form.is_valid():
             form.save()
             return JsonResponse({
                 'success': True,

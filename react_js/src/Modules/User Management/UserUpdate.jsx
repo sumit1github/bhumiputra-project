@@ -38,6 +38,7 @@ const UserUpdate = () => {
     "zip_code": "",
     "is_active": false,
     "invite_tokens": 0,
+    "is_distributer": false,
   });
 
   // -------------Loading User Details from API----------------
@@ -69,7 +70,8 @@ const UserUpdate = () => {
         address: user_detaildata.user.address?.trim() || "",
         zip_code: user_detaildata.user.zip_code?.trim() || "",
         is_active: user_detaildata.user.is_active || false,
-        invite_tokens: user_detaildata.user.invite_tokens || 0
+        invite_tokens: user_detaildata.user.invite_tokens || 0,
+        is_distributer: user_detaildata.user.is_distributer || false,
       };
       console.log("User Details:", sanitizedData);
       setFormData(sanitizedData);
@@ -287,6 +289,21 @@ const UserUpdate = () => {
                             />
                           </div>
                           <div className="hint-text">Account needs to be active for login</div>
+                        </div>
+                      </div>
+
+                      <div className="col-md-3">
+                        <div className="form-group">
+                          <label className="form-label">Is Distributer?</label>
+                          <div className="d-flex align-items-center mt-2">
+                            <Checkbox
+                              name="is_distributer"
+                              id="is_distributer"
+                              value={formData.is_distributer}
+                              onchangeFunction={handleChange}
+                            />
+                          </div>
+                          <div className="hint-text">Mark as distributer</div>
                         </div>
                       </div>
 

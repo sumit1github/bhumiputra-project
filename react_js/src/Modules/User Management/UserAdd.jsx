@@ -42,12 +42,13 @@ const UserAdd = () => {
     date_joined: '',
     age: '',
     dob: '',
-    gender: '',
+    gender: 'MALE',
     address: '',
     zip_code: '',
     parent: parent || '',
-    is_active: false,
+    is_active: true,
     invite_tokens: 0,
+    is_distributer: false,
   });
 
   const handleChange = (e) => {
@@ -263,7 +264,7 @@ const UserAdd = () => {
                   <h3 className="section-title">Additional Information</h3>
                   <div className="row">
 
-                    <div className="col-md-4">
+                    <div className="col-md-3">
                       <div className="form-group parent-info">
                         <label className="form-label">Parent User ID <span className="required">*</span><span style={{ color: "green" }}> (Parent Name: {parent_name || ""})</span></label>
                         <input id="parent" name="parent" value={formData.parent} onChange={handleChange} className="form-control" placeholder="e.g. 123" readOnly={true} />
@@ -272,30 +273,59 @@ const UserAdd = () => {
                       </div>
                     </div>
 
-                    <div className="col-md-4">
-                      <div className="form-group">
-                        <label className="form-label">Invite Tokens <span className="required">*</span></label>
-                        <input id="invite_tokens" name="invite_tokens" value={formData.invite_tokens} onChange={handleChange} className="form-control" />
-                      </div>
-                      {formErrors.invite_tokens && <div className="text-danger">{formErrors.invite_tokens}</div>}
+                    {(
+                      userData?.user?.roles?.includes('ADMIN') ||
+                      userData?.user?.roles?.includes('IT')
+                    ) && (
+                        <div className="col-md-3">
+                          <div className="form-group">
+                            <label className="form-label">Invite Tokens <span className="required">*</span></label>
+                            <input id="invite_tokens" name="invite_tokens" value={formData.invite_tokens} onChange={handleChange} className="form-control" />
+                          </div>
+                          {formErrors.invite_tokens && <div className="text-danger">{formErrors.invite_tokens}</div>}
 
-                    </div>
-
-                    <div className="col-md-4">
-                      <div className="form-group">
-                        <label className="form-label">Account Status</label>
-                        <div className="d-flex align-items-center mt-2">
-                          <Checkbox
-                            name="is_active"
-                            id="is_active"
-                            value={formData.is_active}
-                            onchangeFunction={handleChange}
-                          />
                         </div>
-                        <div className="hint-text">Account needs to be active for login</div>
-                      </div>
-                    </div>
+                      )}
 
+                    {(
+                      userData?.user?.roles?.includes('ADMIN') ||
+                      userData?.user?.roles?.includes('IT')
+                    ) && (
+                        <div className="col-md-3">
+                          <div className="form-group">
+                            <label className="form-label">Account Status</label>
+                            <div className="d-flex align-items-center mt-2">
+                              <Checkbox
+                                name="is_active"
+                                id="is_active"
+                                value={formData.is_active}
+                                onchangeFunction={handleChange}
+                              />
+                            </div>
+                            <div className="hint-text">Active for login</div>
+                          </div>
+                        </div>
+                      )}
+
+                    {(
+                      userData?.user?.roles?.includes('ADMIN') ||
+                      userData?.user?.roles?.includes('IT')
+                    ) && (
+                        <div className="col-md-3">
+                          <div className="form-group">
+                            <label className="form-label">Is Distributer?</label>
+                            <div className="d-flex align-items-center mt-2">
+                              <Checkbox
+                                name="is_distributer"
+                                id="is_distributer"
+                                value={formData.is_distributer}
+                                onchangeFunction={handleChange}
+                              />
+                            </div>
+                            <div className="hint-text">Mark as distributer</div>
+                          </div>
+                        </div>
+                      )}
                   </div>
                 </div>
 
@@ -310,11 +340,6 @@ const UserAdd = () => {
           </div>
         </div>
       </div>
-
-
-
-
-
 
     </AdminLayout>
   );
