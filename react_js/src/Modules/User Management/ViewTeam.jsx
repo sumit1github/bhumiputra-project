@@ -22,7 +22,7 @@ export const ViewTeam = () => {
     // Load user list when component mounts or when page changes
     useEffect(() => {
 
-        if (userData?.user?.roles?.includes('ADMIN')) {
+        if (userData?.user?.is_admin) {
             loadUserList(parent);
         }
         else {

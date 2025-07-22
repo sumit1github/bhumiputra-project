@@ -9,9 +9,23 @@ from utils import serilalizer_error_list
 
 class UserListSerializer(serializers.ModelSerializer):
     roles = serializers.SerializerMethodField()
+    is_distributer = serializers.SerializerMethodField()
+    is_admin = serializers.SerializerMethodField()
+    is_it = serializers.SerializerMethodField()
+    
+
     def get_roles(self, obj):
         
         return obj.get_roles_list
+    
+    def get_is_distributer(self, obj):
+        return obj.is_distributer
+
+    def get_is_admin(self, obj):
+        return obj.is_admin
+
+    def get_is_it(self, obj):
+        return obj.is_it
 
     class Meta:
         model = User
@@ -32,6 +46,8 @@ class UserListSerializer(serializers.ModelSerializer):
             "achiver_level",
             "invite_tokens",
             "is_distributer",
+            "is_admin",
+            "is_it"
         ]
 
 
@@ -105,7 +121,6 @@ class InviteUserSerializer(serializers.ModelSerializer):
             'parent',
             "invite_tokens",
             'is_active',
-            "is_distributer",
         ]
         extra_kwargs = {
             'full_name': {'required': True},
@@ -121,7 +136,6 @@ class InviteUserSerializer(serializers.ModelSerializer):
             'contact2': {'required': False},
             'is_active': {'required': False},
             'invite_tokens': {'required': True},
-            'is_distributer': {'required': False,}
         }
 
     def validate(self, data):

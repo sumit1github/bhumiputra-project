@@ -23,9 +23,23 @@ class LoginSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     roles = serializers.SerializerMethodField()
+    is_distributer = serializers.SerializerMethodField()
+    is_admin = serializers.SerializerMethodField()
+    is_it = serializers.SerializerMethodField()
+    
+
     def get_roles(self, obj):
         
         return obj.get_roles_list
+
+    def get_is_distributer(self, obj):
+        return obj.is_distributer
+
+    def get_is_admin(self, obj):
+        return obj.is_admin
+
+    def get_is_it(self, obj):
+        return obj.is_it
 
     class Meta:
         model = models.User

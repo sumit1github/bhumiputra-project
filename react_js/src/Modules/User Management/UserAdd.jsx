@@ -107,7 +107,7 @@ const UserAdd = () => {
   };
 
   useEffect(() => {
-    if (!userData?.user?.roles?.includes('ADMIN') && !userData?.user?.roles?.includes('IT')) {
+    if (!userData?.user?.is_admin && !userData?.user?.is_it) {
       if (userData?.user?.invite_tokens <= 0) {
         toast.error("You don't have enough Join-Pins to add a user.");
         navigate("/users");
@@ -274,8 +274,8 @@ const UserAdd = () => {
                     </div>
 
                     {(
-                      userData?.user?.roles?.includes('ADMIN') ||
-                      userData?.user?.roles?.includes('IT')
+                      userData?.user?.is_admin ||
+                      userData?.user?.is_it
                     ) && (
                         <div className="col-md-3">
                           <div className="form-group">
@@ -288,8 +288,8 @@ const UserAdd = () => {
                       )}
 
                     {(
-                      userData?.user?.roles?.includes('ADMIN') ||
-                      userData?.user?.roles?.includes('IT')
+                      userData?.user?.is_admin ||
+                      userData?.user?.is_it
                     ) && (
                         <div className="col-md-3">
                           <div className="form-group">
@@ -308,8 +308,8 @@ const UserAdd = () => {
                       )}
 
                     {(
-                      userData?.user?.roles?.includes('ADMIN') ||
-                      userData?.user?.roles?.includes('IT')
+                      userData?.user?.is_admin ||
+                      userData?.user?.is_it
                     ) && (
                         <div className="col-md-3">
                           <div className="form-group">

@@ -41,6 +41,7 @@ urlpatterns = [
     path('system/', include('system.urls')),
     path('product/', include('product_management.urls')),
     path('', include('website.urls')),
+    path('distributer/', include('distributer_module.urls')),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

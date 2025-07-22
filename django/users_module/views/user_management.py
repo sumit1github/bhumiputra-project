@@ -22,8 +22,10 @@ from auth_module.models import User
 from auth_module.custom_decorator import access_limited_to
 from ..constants import JOINING_COMISSION, ACHIVER_LEVELS
 from auth_module.serilaizer import UserSerializer
+from utils import add_user_to_cache, cache_user_seaerch, repopulate_users_to_cache
 
 
+@method_decorator(access_limited_to('ADMIN,IT,USER'), name='dispatch') 
 class UserFilter(APIView):
     """
     userList
@@ -137,34 +139,9 @@ class UserFilter(APIView):
                 "message": user_inactive["message"]
             })
         
+@method_decorator(access_limited_to('ADMIN,IT,USER'), name='dispatch') 
 @method_decorator(transaction.atomic, name='dispatch')
 class InviteUser(APIView):
-
-    def invite_token_and_achiver_level_update(self, request, current_user, parent_user):
-        """ Update the achiver level of parent users based on the current user's achiver level for new invitation."""
-        
-        # Reduce invite token
-
-        if not current_user.is_superuser or not current_user.has_access("ADMIN,IT"):
-            current_user.invite_tokens = max(current_user.invite_tokens - 1, 0)
-
-            if parent_user.achiver_level < 5:
-                parent_user.achiver_level += 1
-            
-            current_user.save()
-
-        else:
-
-            parent_user.achiver_level += 1
-            print(parent_user.achiver_level)
-            
-        parent_user.save()
-
-        is_same_user = request.user.pk == current_user.pk
-        if not is_same_user and (not request.user.is_superuser and not request.user.has_access("ADMIN,IT")):
-            request.user.invite_tokens = max(request.user.invite_tokens - 1, 0)
-            request.user.save()
-
 
     def distribute_joining_rewards(self, new_user):
         """
@@ -203,6 +180,13 @@ class InviteUser(APIView):
         if users_to_update:
             User.objects.bulk_update(users_to_update, ['wallet_balance'])
 
+    def add_user_to_cache(self, user_instance):
+        """
+        Adds the user instance to the cache for quick access.
+        """
+        add_user_to_cache(user_instance)
+
+
     @swagger_auto_schema(**get_swagger_api_details("user_invite_post"))
     def post(self, request):
 
@@ -238,21 +222,32 @@ class InviteUser(APIView):
             if 'password' in cleaned_data:
 
                 cleaned_data["password"] = make_password(cleaned_data["password"])
-
+            
+            # if distributer
+            if request.data.get("is_distributer", False):
+                cleaned_data["role"] = "USER,DISTRIBUTER"
+            
             user_add = uc.invite_user(cleaned_data)
             
-            if request.user.is_superuser or request.user.has_access("ADMIN,IT"):
-                if parent_user.achiver_level < 5:
-                    parent_user.achiver_level += 1
-                    parent_user.save()
-            else:
-                if request.user.achiver_level < 5:
-                    request.user.achiver_level += 1
-                    request.user.invite_tokens = max(request.user.invite_tokens - 1, 0)
-                    request.user.save()
+            if not user_add["user"].has_access("DISTRIBUTER"):
+                if request.user.is_superuser or request.user.has_access("ADMIN,IT"):
+                    if parent_user.achiver_level < 5:
+                        parent_user.achiver_level += 1
+                        parent_user.save()
+                else:
+                    if request.user.achiver_level < 5:
+                        request.user.achiver_level += 1
+                        request.user.invite_tokens = max(request.user.invite_tokens - 1, 0)
+                        request.user.save()
 
             if not user_add['error']:
-                self.distribute_joining_rewards(user_add["user"])
+
+                if not user_add["user"].has_access("DISTRIBUTER"):
+                    # distributer not circulate the rewards
+                    self.distribute_joining_rewards(user_add["user"])
+                
+                # add user to cache
+                self.add_user_to_cache(user_add["user"])
 
                 return Response({
                     "status": 200,
@@ -271,7 +266,8 @@ class InviteUser(APIView):
                     "error": error_list,
                 }
             )
-        
+
+@method_decorator(access_limited_to('ADMIN,IT'), name='dispatch')     
 class UserDetailsUpdateView(APIView):
     
     @swagger_auto_schema(**get_swagger_api_details("user_details_get"))
@@ -303,12 +299,20 @@ class UserDetailsUpdateView(APIView):
             return Response({"status": 400, "error": {
                 "pk": "Primary Key (pk) is required to update user details."
             }})
+        
         serializer = UserUpdateSerializer(data=request.data, instance=user, partial=True)
         if serializer.is_valid():
             cleaned_data = serializer.validated_data
             if 'password' in cleaned_data:
                 cleaned_data["password"] = make_password(cleaned_data["password"])
-                print(cleaned_data)
+            
+            is_distributer = request.data.get("is_distributer", False)
+            if is_distributer and request.user.is_superuser:
+                # if user is superuser then we can update the role to distributer
+                cleaned_data["role"] = "USER,DISTRIBUTER"
+            else:
+                # if user is not superuser then we can not update the role to distributer
+                cleaned_data["role"] = "USER"
 
             uc = UserController()
             user_update = uc.update_user(pk, cleaned_data)
@@ -337,3 +341,28 @@ class UserDetailsUpdateView(APIView):
                     "error": error_list,
                 }
             )
+        
+class UserCacheSearch(APIView):
+    """
+    API to search users from cache based on a specific field and value.
+    """
+    def post(self, request):
+        search_by = request.data.get("search_by", None)
+        search_value = request.data.get("search_value", None)
+
+        if not search_by or not search_value:
+            return Response({
+                "status": 400,
+                "error": {
+                    "search_by": "Search by field is required.",
+                    "search_value": "Search value is required."
+                }
+            })
+
+        repopulate_users_to_cache()
+        users = cache_user_seaerch(search_by, search_value)
+
+        return Response({
+            "status": 200,
+            "users": users
+        })

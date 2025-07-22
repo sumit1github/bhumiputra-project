@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router";
-import {
-  FaUserPlus,
-} from 'react-icons/fa';
-
 
 import AdminLayout from "../IT-Dashboard/AdminLayout";
 import { productCreate } from "./product_calls";
@@ -13,8 +9,6 @@ import { Checkbox } from "../../common_components/form_component/Checkbox";
 export const ProductAdd = () => {
   const [formErrors, setFormErrors] = useState({});
   const navigate = useNavigate();
-
-
 
   const [formData, setFormData] = useState({
     uid: '',

@@ -16,3 +16,5 @@ email : lixaso8895@claspira.com
 host-url : 13.204.63.192
 
 ssh -i hmsdjango.pem ubuntu@13.204.63.192
+
+# All Cache Keys

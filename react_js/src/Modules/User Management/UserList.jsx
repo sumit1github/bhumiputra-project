@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { FaPlus, FaSearch, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaPlus, FaSearch, FaEdit } from 'react-icons/fa';
 import { IoMdPersonAdd } from "react-icons/io";
 import { useNavigate } from "react-router";
 import { useSelector } from 'react-redux';
 import { FaArrowsDownToPeople } from "react-icons/fa6";
+import { FcShop } from "react-icons/fc";
 
 import { getUserList, UserSearchApiCall } from "./auth_calls";
 import { TableLayout } from "../../common_components/Table/Table";
@@ -152,16 +153,18 @@ const UserList = () => {
           >
             {userLIst.map((user) => (
               <tr key={user.id}>
-                <td className="id-column">{user.id_prefix || "BP25698"}{user.id}</td>
+                <td className="id-column">
+                  {user.id_prefix || "BP25698"}{user.id}
+                </td>
                 <td className="name-column">{user.full_name}</td>
-                <td className="email-column">{!userData?.user?.roles?.includes('ADMIN') ? "**********" : user.email}</td>
-                <td className="contact-column">{!userData?.user?.roles?.includes('ADMIN') ? "**********" : user.contact1}</td>
+                <td className="email-column">{!userData?.user?.is_admin ? "**********" : user.email}</td>
+                <td className="contact-column">{!userData?.user?.is_admin ? "**********" : user.contact1}</td>
                 <td><span className="level-badge">{user.achiver_level}</span></td>
                 <td><span className="balance-amount">{user.wallet_balance}</span></td>
 
                 <td>
                   <div className="action-buttons">
-                    {userData?.user?.roles?.includes('ADMIN') && (
+                    {userData?.user?.is_admin && (
                       <button onClick={() => navigate(`/users/update/${user.id}`)} className="btn-action btn-edit">
                         <FaEdit />
                       </button>
@@ -171,11 +174,18 @@ const UserList = () => {
                       <IoMdPersonAdd />
                     </button>
 
-                    {userData?.user?.roles?.includes('ADMIN') && (
+                    {userData?.user?.is_admin && (
                       <button title="Downline" onClick={() => navigate(`/team/view?parent=${user.id_prefix + user.id}&parent_name=${user.full_name}`)} className="btn-action btn-delete">
                         <FaArrowsDownToPeople />
                       </button>
                     )}
+
+                    {userData?.user?.is_admin && user?.is_distributer && (
+                      <button title="Downline" onClick={() => navigate(`/team/view?parent=${user.id_prefix + user.id}&parent_name=${user.full_name}`)} className="btn-action btn-delete">
+                        <FcShop className="distributer-icon" title="Distributer" />
+                      </button>
+                    )}
+
 
                   </div>
                 </td>

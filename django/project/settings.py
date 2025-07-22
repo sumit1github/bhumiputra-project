@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'product_management',
     'common',
     "website",
+    "order_module",
 
 ]
 

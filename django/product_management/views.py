@@ -3,6 +3,7 @@ from drf_yasg.utils import swagger_auto_schema
 from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django.db import transaction
+from django.core.cache import cache
 
 
 from utils import serilalizer_error_list, paginate
@@ -14,17 +15,27 @@ from auth_module.models import User
 from auth_module.custom_decorator import access_limited_to
 
 
+@method_decorator(access_limited_to('ADMIN,IT,DISTRIBUTER'), name='dispatch') 
 class GetAllProducts(APIView):
 
     @swagger_auto_schema(**get_swagger_api_details("get_all_products"))
     def get(self, request):
+
         product_list = Products.objects.all().order_by("-id")
-        page, pagemator_meta_data = paginate(
-            request,
-            product_list,
-            20
-        )
-        serialized_data = ProductSerializer(page, many=True).data
+
+        if not request.user.is_distributer:
+            product_list = Products.objects.all().order_by("-id")
+            page, pagemator_meta_data = paginate(
+                request,
+                product_list,
+                20
+            )
+            serialized_data = ProductSerializer(page, many=True).data
+
+        else:
+            serialized_data = ProductSerializer(product_list, many=True).data
+            pagemator_meta_data = None
+
         return Response({
 
             "status": 200,
@@ -54,6 +65,8 @@ class productCreateDetailUpdateDelete(APIView):
         serializer = ProductSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
+            # Clear distributor cache when new product is created
+            cache.delete('distributor_products_list')
             return Response({
                 "status": 200,
                 "message": "Product created successfully",
@@ -88,6 +101,8 @@ class productCreateDetailUpdateDelete(APIView):
         serializer = ProductSerializer(instance=product, data=data)
         if serializer.is_valid():
             serializer.save()
+            # Clear distributor cache when product is updated
+            cache.delete('distributor_products_list')
             return Response({
                 "status": 200,
                 "message": "Product updated successfully",
@@ -112,6 +127,8 @@ class productCreateDetailUpdateDelete(APIView):
         try:
             product = Products.objects.get(id=product_id)
             product.delete()
+            # Clear distributor cache when product is deleted
+            cache.delete('distributor_products_list')
             return Response({
                 "status": 200,
                 "message": "Product deleted successfully"

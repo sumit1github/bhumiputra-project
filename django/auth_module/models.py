@@ -41,8 +41,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     invitation_chain_meta_list = models.JSONField(null=True, blank = True)
 
-    is_distributer = models.BooleanField(default=False, null=True, blank=True)
-
     USERNAME_FIELD = "email"	
     REQUIRED_FIELDS = ["password","contact1"]
     
@@ -90,6 +88,36 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
     
     @property
+    def is_distributer(self):
+        """
+        Check if the user has the 'DISTRIBUTER' role.
+        
+        Returns:
+            bool: True if the user has the 'DISTRIBUTER' role, False otherwise.
+        """
+        return self.has_access("DISTRIBUTER")
+    
+    @property
+    def is_it(self):
+        """
+        Check if the user has the 'IT' role.
+        
+        Returns:
+            bool: True if the user has the 'IT' role, False otherwise.
+        """
+        return self.has_access("IT")
+    
+    @property
+    def is_admin(self):
+        """
+        Check if the user has the 'ADMIN' role.
+        
+        Returns:
+            bool: True if the user has the 'DISTRIBUTER' role, False otherwise.
+        """
+        return self.has_access("ADMIN") or self.is_superuser
+    
+    @property
     def get_roles_list(self):
         try:
             if not self.role:
@@ -106,38 +134,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def has_access(self, permissions):
         """
-        Determines if the user has access based on their role and the required permissions.
-
-        This method checks whether the user's role contains the required permissions. 
-        Permissions can be provided as a comma-separated string (for any one permission) 
-        or a space-separated string (for all permissions).
+        Determines if the user has access based on their role and the required permissions, supporting negative conditions (e.g., '!DISTRIBUTER').
 
         Args:
             permissions (str): A string of required permissions. 
-            - Comma-separated (e.g., "read,write") to check if the user has any one of the permissions.
-            - Space-separated (e.g., "read write") to check if the user has all the permissions.
+                - Comma-separated (e.g., "read,write,!delete") to check if the user has any one of the permissions (including negative checks).
+                - Space-separated (e.g., "read write !delete") to check if the user has all the permissions (including negative checks).
 
         Returns:
             bool: True if the user has the required permissions, False otherwise.
-
-        Examples:
-            user.role = "admin read write"
-            user.has_access("read,write")  # Returns True (any one permission is enough)
-            user.has_access("read write")  # Returns True (all permissions are required)
-            user.has_access("delete")     # Returns False (permission not found in role)
         """
         if not permissions or not self.role:
             return False
 
-        # Always normalize both sides
-        user_role = self.role.lower()
+        user_roles = [role.strip().lower() for role in self.role.split(',') if role.strip()]
+        perms = [perm.strip() for perm in (permissions.split(',') if ',' in permissions else permissions.split(' ')) if perm.strip()]
+
+        def check_perm(perm):
+            if perm.startswith('!'):
+                return perm[1:].lower() not in user_roles
+            else:
+                return perm.lower() in user_roles
 
         if ',' in permissions:
-            # ANY ONE permission is enough
-            perms = [perm.strip().lower() for perm in permissions.split(',')]
-            return any(perm in user_role for perm in perms)
+            # ANY ONE permission is enough (positive or negative)
+            return any(check_perm(perm) for perm in perms)
         else:
-            # ALL permissions must be there
-            perms = [perm.strip().lower() for perm in permissions.split(' ')]
-            return all(perm in user_role for perm in perms)
+            # ALL permissions must be there (positive and negative)
+            return all(check_perm(perm) for perm in perms)
 
