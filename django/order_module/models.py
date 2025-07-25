@@ -57,3 +57,7 @@ class Order(models.Model):
     def get_not_discounted_price(self):
         if self.discount:
             return self.total_amount if self.discount <= 0 else self.total_amount * (1 - self.discount / 100)
+    
+    @property
+    def uid(self):
+        return f"{self.id_prefix}{self.id}"
