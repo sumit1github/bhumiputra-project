@@ -15,6 +15,7 @@ import { ProductAdd } from "./Modules/ProductManagement/ProductAdd";
 import { ViewTeam } from "./Modules/User Management/ViewTeam";
 import { ContactSubmissionList } from "./Modules/ContactFormSubmission/ContactSubmissionList";
 import { DistributerLanding } from "./Modules/DistributerPanel/Dashboard/DistributerLanding";
+import { OrderList } from "./Modules/OrderManagement/OrderList";
 
 function App() {
   return (
@@ -40,6 +41,9 @@ function App() {
 
         {/* distributer Landing */}
         <Route path="distributer/dashboard" element={<DistributerLanding />} />
+
+        {/* Order Management */}
+        <Route path="order/list" element={<OrderList />} />
 
       </Routes>
 

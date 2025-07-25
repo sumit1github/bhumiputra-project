@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { FaSearch, FaShoppingCart, FaPlus, FaMinus, FaTrash, FaUser, FaBox, FaCheckCircle } from 'react-icons/fa';
 import { Container, Row, Col, Card, Button, Form, Modal, Badge, Alert } from 'react-bootstrap';
 
 
 import AdminLayout from "../../IT-Dashboard/AdminLayout";
 import './DistributerLanding.css';
-import { getProductList, searchUser } from '../distributer_calls'; // Import the API call
+import { getProductList, searchUser, placeOrder } from '../distributer_calls';
 
 export const DistributerLanding = () => {
     const [searchProductQuery, setSearchProductQuery] = useState('');
@@ -119,11 +120,6 @@ export const DistributerLanding = () => {
         return getSubtotal() - getDiscount();
     };
 
-    const handleCheckout = () => {
-        alert('Order placed successfully!');
-        setCartItems([]);
-        setShowCartModal(false);
-    };
 
     // ------------------ user search functionality ------------------
     const { mutate: searchUserData, data: user_data, error: userError } = searchUser();
@@ -167,6 +163,34 @@ export const DistributerLanding = () => {
     const handleCancelUserSearch = () => {
         setUserFound(null); // Clear search results
     };
+
+
+    // ------------------- order place ------------------------
+    const { mutate: orderPlaceCall, data: orderPlaceData, isLoading: orderPlaceIsLoading, isError: orderPlaceIsError, error: orderPlaceError } = placeOrder();
+    const handlePlaceOrder = () => {
+
+        orderPlaceCall({
+            "customer": selectedUser ? selectedUser.id : null,
+            "products_info": cartItems.map(item => ({
+                "p_id": item.id,
+                "qty": item.quantity
+            }))
+        });
+
+    }
+
+    useEffect(() => {
+        if (orderPlaceData) {
+            if (orderPlaceData?.status === 200) {
+                setCartItems([]);
+                setShowCartModal(false);
+                toast.success(orderPlaceData?.message);
+            } else {
+                toast.error(orderPlaceData?.message || "Something went wrong while placing the order.");
+            }
+        }
+    }, [orderPlaceData]);
+
 
     return (
         <AdminLayout>
@@ -567,7 +591,7 @@ export const DistributerLanding = () => {
                             <div className="cart-actions">
                                 <Button
                                     variant="success"
-                                    onClick={handleCheckout}
+                                    onClick={handlePlaceOrder}
                                     className="place-order-btn"
                                 >
                                     <span className="btn-text">Place Order</span>

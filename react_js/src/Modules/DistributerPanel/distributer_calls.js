@@ -19,3 +19,13 @@ export const searchUser = () => {
 
     });
 };
+
+export const placeOrder = () => {
+    return useMutation({
+        mutationFn: async (order_data) => {
+            const res = await apiClient.post("/order/create/", order_data);
+            return res.data;
+        },
+
+    });
+};

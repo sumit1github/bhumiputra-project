@@ -4,7 +4,7 @@ import { FaBox, FaTachometerAlt, FaUsers } from "react-icons/fa";
 import { IoMdRefresh, IoMdWallet } from "react-icons/io";
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
-import { BsMicrosoftTeams } from "react-icons/bs";
+import { BsMicrosoftTeams, BsClockHistory } from "react-icons/bs";
 import { GrContactInfo } from "react-icons/gr";
 import { FcShop } from "react-icons/fc";
 
@@ -212,19 +212,35 @@ const AdminLayout = ({ children }) => {
                   userData?.user?.is_it ||
                   userData?.user?.is_distributer
                 ) && (
-                    <li className="nav-item">
-                      <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/distributer') ? 'nav-link active' : ''}`}>
-                        <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
-                          <FcShop className="text-white" />
-                          <span
-                            onClick={() => handleNavigation('/distributer/dashboard')}
-                            className="text-decoration-none text-white"
-                          >
-                            Distributer Panel
-                          </span>
+                    <>
+                      <li className="nav-item">
+                        <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/distributer') ? 'nav-link active' : ''}`}>
+                          <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
+                            <FcShop className="text-white" />
+                            <span
+                              onClick={() => handleNavigation('/distributer/dashboard')}
+                              className="text-decoration-none text-white"
+                            >
+                              Distributer Panel
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    </li>
+                      </li>
+
+                      <li className="nav-item">
+                        <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/order/history') ? 'nav-link active' : ''}`}>
+                          <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
+                            <BsClockHistory className="text-white" />
+                            <span
+                              onClick={() => handleNavigation('/order/list')}
+                              className="text-decoration-none text-white"
+                            >
+                              Order History
+                            </span>
+                          </div>
+                        </div>
+                      </li>
+                    </>
                   )}
 
               </ul>
