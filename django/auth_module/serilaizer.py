@@ -6,7 +6,7 @@ from . import models
 
 class LoginSerializer(serializers.Serializer):
 
-    email = serializers.EmailField(
+    email = serializers.CharField(
         required = True,
         help_text="Enter Email."
     )

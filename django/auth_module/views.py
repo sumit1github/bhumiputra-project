@@ -49,12 +49,20 @@ class Login(APIView):
         user = None
         serilizer = self.serializer_class(data =request.data)
         if serilizer.is_valid():
-            email = serilizer.validated_data.get('email')
+            email = serilizer.validated_data.get('email', None)
             password = serilizer.validated_data.get('password')
 
+            seach_dict = {
+                'email': email,
+            }
+            if not "@" in email:
+                seach_dict = {
+                    'contact1': email,
+                }
+            
             try:
-                user = self.model.objects.get(email=email)
-
+                user = self.model.objects.get(**seach_dict)
+                print(user)
             except common_model.User.DoesNotExist:
 
                 user = None

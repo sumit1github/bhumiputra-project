@@ -107,15 +107,15 @@ const Login = () => {
             <form onSubmit={handleLogin}>
               {/* Email Field */}
               <div className="form-group">
-                <label className="form-label">Email Address</label>
+                <label className="form-label">Email Or Phone Number</label>
                 <div className="input-group">
                   <input
-                    type="email"
+                    type="text"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
                     className="form-control-custom"
-                    placeholder="Enter your email address"
+                    placeholder="Enter your email or phone number"
                     required
                     disabled={isLoading}
                   />
