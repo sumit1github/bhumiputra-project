@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.db import transaction
 from utils import serilalizer_error_list, paginate
 from .swagger_doc import get_swagger_api_details
+from decimal import Decimal
 
 from auth_module.custom_decorator import access_limited_to
 from product_management.models import Products
@@ -13,14 +14,42 @@ from product_management.serializers import ProductSerializer
 from auth_module.models import User
 from order_module.models import Order
 from order_module.serializers import OrderCreateSerializer, OrderListSerializer
+from users_module.constants import REPURCHASE_COMISSION
 
 
 @method_decorator(access_limited_to("ADMIN,IT,DISTRIBUTER"), name='dispatch')
+@method_decorator(transaction.atomic, name='dispatch')
 class OrderCreation(APIView):
+
+    def get_total_bv(self, products_info):
+        final = 0
+        for product in products_info:
+            final += product.get("total_bv",0)
+        return final
+            
+
+    def commision_distribution(self, user_obj, total_bv):
+
+        current_user = user_obj.parent
+        level = 1
+        users_to_update = []
+
+        while current_user and level <= 23:
+            raw_comission = REPURCHASE_COMISSION.get(level)
+            comission = (raw_comission * total_bv) / 100
+            current_user.wallet_balance += Decimal(comission)
+
+            users_to_update.append(current_user)# bulk update
+
+            current_user = current_user.parent
+            level += 1
+
+        if users_to_update:
+            User.objects.bulk_update(users_to_update, ['wallet_balance'])
 
     def post(self, request):
         """Create order"""
-    
+
         serilalizer = OrderCreateSerializer(data=request.data)
         if not serilalizer.is_valid():
             return Response({
@@ -33,18 +62,37 @@ class OrderCreation(APIView):
         customer = data.get("customer", None)
         products_info = data.get("products_info")
 
+        # Handle customer_id extraction safely
+        customer_id = None
+        if customer:
+            customer_id = customer[7:] if len(customer) > 7 else customer
+        
+        total_price = sum(product.get("total_price", 0) for product in products_info)
 
+        if not customer_id:
+            # No customer: apply 5% discount
+            final_amount = total_price * 0.95
+        else:
+            # Customer exists: no discount
+            final_amount = total_price
+        
         order_obj = Order.objects.create(
-            customer_id=customer[7:],
+            customer_id=customer_id,
             products_info=products_info,
-            distributer=request.user
+            distributer=request.user,
+            total_amount= final_amount,
         )
 
-        
+        if customer and customer_id:
+            customer_obj = User.objects.get(id=customer_id)
+            total_bv = self.get_total_bv(products_info)
+            self.commision_distribution(customer_obj, total_bv)
+
         return Response({
             "status": 200,
             "message": f"Order id ({order_obj.id_prefix + str(order_obj.id)}) created successfully",
         }, status=200)
+    
     
 @method_decorator(access_limited_to("ADMIN,IT,DISTRIBUTER"), name='dispatch')
 class OrderList(APIView):
@@ -54,14 +102,21 @@ class OrderList(APIView):
     def get(self, request):
         """order history"""
 
+        search_date_interval = request.GET.get("search_date_interval", None)
+
         filter_dict = None
 
         if request.user.is_distributer:
             filter_dict = {
-                "distributer": request.user.id
+                "distributer": request.user
             }
-       
-        if filter_dict:
+        
+        if not request.user.is_distributer and not request.user.is_admin:
+            filter_dict = {
+                "customer": request.user
+            }
+
+        if filter_dict: 
             order_list = Order.objects.filter(**filter_dict).order_by("-id")
         else:
             order_list = Order.objects.all().order_by("-id")

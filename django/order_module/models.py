@@ -26,11 +26,11 @@ class Order(models.Model):
         if not self.id_prefix:
             self.id_prefix = generate_unique_id(5)
 
-        self.products_info = json.dumps(self.products_info)
-
         if not self.discount and not self.customer:
             self.discount = 5.00
         
+        self.products_info = json.dumps(self.products_info)
+
         super(Order, self).save(*args, **kwargs)
 
     @property

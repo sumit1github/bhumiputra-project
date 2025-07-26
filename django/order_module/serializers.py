@@ -8,7 +8,8 @@ class OrderCreateSerializer(serializers.Serializer):
     customer = serializers.CharField(
         max_length=100,
         required=False,
-        allow_blank=False,
+        allow_blank=True,
+        allow_null=True,
         trim_whitespace=True,
         help_text="Need to pass product pk."
     )
@@ -17,7 +18,6 @@ class OrderCreateSerializer(serializers.Serializer):
         required=True,
         help_text='List of products with quantity. Example: [{"p_id": 1, "qty": 2}, {"p_id": 3, "qty": 1}]'
     )
-
 
 class OrderListSerializer(serializers.ModelSerializer):
     

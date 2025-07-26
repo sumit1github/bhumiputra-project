@@ -42,7 +42,8 @@ def add_user_to_cache(user_instance):
         cache.set(CACHE_KEY, users, timeout=None)
 
 
-def cache_user_seaerch(serch_by, search_value):
+def cache_user_seaerch(search_by, search_value):
+    print(search_by, search_value)
     users = get_all_users_from_cache()
-    users = [u for u in users if u[f"{serch_by}"] == search_value]
+    users = [u for u in users if u[f"{search_by}"] == search_value]
     return users

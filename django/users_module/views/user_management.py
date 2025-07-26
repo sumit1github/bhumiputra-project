@@ -358,8 +358,7 @@ class UserCacheSearch(APIView):
                     "search_value": "Search value is required."
                 }
             })
-
-        repopulate_users_to_cache()
+        
         users = cache_user_seaerch(search_by, search_value)
 
         return Response({
