@@ -1,13 +1,28 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, Badge, Form, Button } from 'react-bootstrap';
-import { FaShoppingCart, FaCalendarAlt, FaSearch, FaSync, FaMoneyBillWave } from 'react-icons/fa';
+import { FaShoppingCart, FaCalendarAlt, FaSearch, FaSync, FaMoneyBillWave, FaEye } from 'react-icons/fa';
 import { BiPackage } from 'react-icons/bi';
+import CustomPagination from "../../common_components/pagination/CustomPagination";
+import { useSelector } from 'react-redux';
+
+
 
 import AdminLayout from "../IT-Dashboard/AdminLayout";
 import { getOrderList } from './order_calls';
 import './OrderList.css';
 
 export const OrderList = () => {
+    const userData = useSelector((state) => state.user);
+    //----------------------------- pagination ----------------------------------
+    const [paginationMeta, setPaginationMeta] = useState({});
+    const [currentPage, setCurrentPage] = useState(1);
+
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+
+
     const [orders, setOrders] = useState([]);
     const [filteredOrders, setFilteredOrders] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -93,6 +108,13 @@ export const OrderList = () => {
         loadOrderList();
     };
 
+    const handleViewDetails = (orderId) => {
+        // Navigate to order details page or open modal
+        console.log('View details for order:', orderId);
+        // You can implement navigation logic here
+        // Example: navigate(`/orders/${orderId}`);
+    };
+
     return (
         <AdminLayout>
             <div className="order-list-container">
@@ -121,27 +143,13 @@ export const OrderList = () => {
                         </Row>
                     </div>
 
+
+
                     {/* Search and Filter Section */}
-                    <Card className="search-filter-card mb-4">
+                    {/* <Card className="search-filter-card mb-4">
                         <Card.Body>
                             <Row className="align-items-end">
-                                <Col md={6} lg={4}>
-                                    <Form.Group>
-                                        <Form.Label>Search Orders</Form.Label>
-                                        <div className="search-input-group">
-                                            <Form.Control
-                                                type="text"
-                                                placeholder="Search by Order ID or UID..."
-                                                value={searchQuery}
-                                                onChange={(e) => setSearchQuery(e.target.value)}
-                                                className="search-input"
-                                            />
-                                            <div className="search-icon">
-                                                <FaSearch />
-                                            </div>
-                                        </div>
-                                    </Form.Group>
-                                </Col>
+
                                 <Col md={4} lg={3}>
                                     <Form.Group>
                                         <Form.Label>Filter by Date</Form.Label>
@@ -158,16 +166,10 @@ export const OrderList = () => {
                                         </Form.Select>
                                     </Form.Group>
                                 </Col>
-                                <Col md={2} lg={2} className="text-end">
-                                    <div className="results-count">
-                                        <small className="text-muted">
-                                            {filteredOrders.length} order{filteredOrders.length !== 1 ? 's' : ''} found
-                                        </small>
-                                    </div>
-                                </Col>
+
                             </Row>
                         </Card.Body>
-                    </Card>
+                    </Card> */}
 
                     {/* Orders Grid */}
                     <Row>
@@ -193,7 +195,7 @@ export const OrderList = () => {
                                                         <BiPackage size={20} />
                                                     </div>
                                                     <div className="ms-2">
-                                                        <h6 className="order-id mb-0">#{order.id}</h6>
+
                                                         <Badge bg="light" text="dark" className="order-uid-badge">
                                                             {order.uid}
                                                         </Badge>
@@ -233,17 +235,22 @@ export const OrderList = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </Card.Body>
 
-                                        <Card.Footer className="order-card-footer">
-                                            <Button
-                                                variant="outline-primary"
-                                                size="sm"
-                                                className="view-details-btn w-100"
-                                            >
-                                                View Details
-                                            </Button>
-                                        </Card.Footer>
+                                            {/* Order Details Button */}
+                                            {(userData?.user?.is_admin || userData?.user?.is_it) && (
+                                                <div className="order-actions">
+                                                    <Button
+                                                        variant="primary"
+                                                        size="sm"
+                                                        className="w-100 order-details-btn"
+                                                        onClick={() => handleViewDetails(order.id)}
+                                                    >
+                                                        <FaEye className="btn-icon" />
+                                                        View Details
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </Card.Body>
                                     </Card>
                                 </Col>
                             ))
@@ -263,6 +270,18 @@ export const OrderList = () => {
                                 </Card>
                             </Col>
                         )}
+                    </Row>
+
+                    {/* Pagination Section */}
+                    <Row className="justify-content-center mt-4">
+                        <Col xs="auto">
+                            <div className="pagination-container">
+                                <CustomPagination
+                                    metadata={paginationMeta}
+                                    onPageChange={handlePageChange}
+                                />
+                            </div>
+                        </Col>
                     </Row>
                 </Container>
             </div>

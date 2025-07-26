@@ -173,7 +173,9 @@ export const DistributerLanding = () => {
             "customer": selectedUser ? selectedUser.id : null,
             "products_info": cartItems.map(item => ({
                 "p_id": item.id,
-                "qty": item.quantity
+                "qty": item.quantity,
+                "total_bv": item.bv_price * item.quantity,
+                "total_price": item.sell_price * item.quantity
             }))
         });
 

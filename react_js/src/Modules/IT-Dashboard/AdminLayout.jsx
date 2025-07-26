@@ -112,7 +112,7 @@ const AdminLayout = ({ children }) => {
                 <div className="text-white text-sm ">{userData?.user?.email}</div>
               </div>
               <div className="d-flex gap-4 align-items-center p-3">
-                {!userData?.user?.is_admin && (
+                {!(userData?.user?.is_admin || userData?.user?.is_distributer) && (
                   <>
                     <div className="d-flex align-items-center gap-2">
                       <IoMdWallet size={24} title="Profile" style={{ color: "aliceblue" }} />
@@ -124,7 +124,7 @@ const AdminLayout = ({ children }) => {
                 <MdExitToApp size={26} title="Logout" onClick={handleLogout} style={{ color: "aliceblue" }} />
               </div>
 
-              {!userData?.user?.is_admin && (
+              {!(userData?.user?.is_admin || userData?.user?.is_distributer) && (
                 <p><SquareButton89 label={`JOIN-PINS: ${userData?.user?.invite_tokens}`} /></p>
               )}
 
@@ -142,18 +142,20 @@ const AdminLayout = ({ children }) => {
                 </li> */}
 
                 {/* Users */}
-                <li className="nav-item">
-                  <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/users') ? 'nav-link active' : ''}`}>
-                    <div className='d-flex align-items-center pointer gap-4 flex-grow-1 ' >
-                      <FaUsers className="text-white" />
-                      <span onClick={() => handleNavigation('/users')} className="text-decoration-none text-white">User Management</span>
+                {!userData?.user?.is_distributer && (
+                  <li className="nav-item">
+                    <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/users') ? 'nav-link active' : ''}`}>
+                      <div className='d-flex align-items-center pointer gap-4 flex-grow-1 ' >
+                        <FaUsers className="text-white" />
+                        <span onClick={() => handleNavigation('/users')} className="text-decoration-none text-white">User Management</span>
+                      </div>
                     </div>
-                  </div>
-                </li>
+                  </li>
+                )}
 
 
                 {/* Team View */}
-                {!userData?.user?.is_admin && (
+                {!(userData?.user?.is_admin || userData?.user?.is_distributer) && (
                   <li className="nav-item">
                     <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/team') ? 'nav-link active' : ''}`}>
                       <div className='d-flex align-items-center pointer gap-4 flex-grow-1 ' >
@@ -227,21 +229,22 @@ const AdminLayout = ({ children }) => {
                         </div>
                       </li>
 
-                      <li className="nav-item">
-                        <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/order/history') ? 'nav-link active' : ''}`}>
-                          <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
-                            <BsClockHistory className="text-white" />
-                            <span
-                              onClick={() => handleNavigation('/order/list')}
-                              className="text-decoration-none text-white"
-                            >
-                              Order History
-                            </span>
-                          </div>
-                        </div>
-                      </li>
                     </>
                   )}
+
+                <li className="nav-item">
+                  <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/order/history') ? 'nav-link active' : ''}`}>
+                    <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
+                      <BsClockHistory className="text-white" />
+                      <span
+                        onClick={() => handleNavigation('/order/list')}
+                        className="text-decoration-none text-white"
+                      >
+                        Order History
+                      </span>
+                    </div>
+                  </div>
+                </li>
 
               </ul>
             </div>
@@ -264,7 +267,7 @@ const AdminLayout = ({ children }) => {
           <img src="/logo.png" alt="Logo" className="person-image-3" />
 
           {/* Progress Bar Section */}
-          {!userData?.user?.is_admin && (
+          {!(userData?.user?.is_admin || userData?.user?.is_distributer) && (
             <div className="d-flex align-items-center gap-3 ms-auto pe-3">
               <div className="d-flex align-items-center gap-2">
                 <span className="level-progress-label">Level</span>
