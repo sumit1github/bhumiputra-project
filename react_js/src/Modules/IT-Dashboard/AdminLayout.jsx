@@ -216,7 +216,7 @@ const AdminLayout = ({ children }) => {
                 ) && (
                     <>
                       <li className="nav-item">
-                        <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/distributer') ? 'nav-link active' : ''}`}>
+                        <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/distributer/dashboard') ? 'nav-link active' : ''}`}>
                           <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
                             <FcShop className="text-white" />
                             <span
@@ -224,6 +224,20 @@ const AdminLayout = ({ children }) => {
                               className="text-decoration-none text-white"
                             >
                               Distributer Panel
+                            </span>
+                          </div>
+                        </div>
+                      </li>
+
+                      <li className="nav-item">
+                        <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated ${window.location.pathname.startsWith('/distributer/joing-package') ? 'nav-link active' : ''}`}>
+                          <div className="d-flex align-items-center pointer gap-4 flex-grow-1" >
+                            <FcShop className="text-white" />
+                            <span
+                              onClick={() => handleNavigation('/distributer/joing-package')}
+                              className="text-decoration-none text-white"
+                            >
+                              Distribute J-Packages
                             </span>
                           </div>
                         </div>

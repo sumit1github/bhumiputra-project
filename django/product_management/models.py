@@ -1,6 +1,11 @@
 from django.db import models
 from utils import generate_unique_id
 
+
+class ProductManager(models.Manager):
+    def get_all_joining_packages(self):
+        return self.filter(is_joining_package=True) 
+
 class Products(models.Model):
 
     uid=models.CharField(max_length=255, null=True, blank=True)
@@ -16,6 +21,8 @@ class Products(models.Model):
     is_joining_package=models.BooleanField(default=False, help_text="Is this product a joining package?")
 
     stock=models.IntegerField(default=1)
+
+    objects = ProductManager()
 
     class Meta:
         db_table = 'product'

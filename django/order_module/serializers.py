@@ -35,3 +35,24 @@ class OrderListSerializer(serializers.ModelSerializer):
             "total_amount",
             "order_date"
         ]
+
+
+class DistributeJoiningPackageSerializer(serializers.Serializer):
+
+    customer = serializers.CharField(
+        max_length=100,
+        required=True,
+        allow_blank=False,
+        allow_null=False,
+        trim_whitespace=True,
+        help_text="Need to pass customer identifier."
+    )
+
+    product_id = serializers.CharField(
+        max_length=100,
+        required=True,
+        allow_blank=False,
+        allow_null=False,
+        trim_whitespace=True,
+        help_text="Need to pass product identifier."
+    )

@@ -13,7 +13,7 @@ from product_management.models import Products
 from product_management.serializers import ProductSerializer
 from auth_module.models import User
 from order_module.models import Order
-from order_module.serializers import OrderCreateSerializer, OrderListSerializer
+from order_module.serializers import OrderCreateSerializer, OrderListSerializer, DistributeJoiningPackageSerializer
 from users_module.constants import REPURCHASE_COMISSION
 
 
@@ -94,7 +94,6 @@ class OrderCreation(APIView):
         }, status=200)
     
     
-@method_decorator(access_limited_to("ADMIN,IT,DISTRIBUTER"), name='dispatch')
 class OrderList(APIView):
 
     serilalizer = OrderListSerializer
@@ -102,11 +101,10 @@ class OrderList(APIView):
     def get(self, request):
         """order history"""
 
-        search_date_interval = request.GET.get("search_date_interval", None)
-
         filter_dict = None
 
         if request.user.is_distributer:
+            
             filter_dict = {
                 "distributer": request.user
             }
@@ -132,3 +130,51 @@ class OrderList(APIView):
             "order_list": OrderListSerializer(page, many=True).data,
             "pagination_meta_data": pagemator_meta_data
         })
+
+
+@method_decorator(access_limited_to("ADMIN,IT,DISTRIBUTER"), name='dispatch')
+@method_decorator(transaction.atomic, name='dispatch')
+class DistributeJoiningPackage(APIView):
+
+    serilalizer = DistributeJoiningPackageSerializer
+
+    def post(self, request):
+        """distribute joining package"""
+        serializer = self.serilalizer(data=request.data)
+        product_id = request.data.get("product_id", None)
+
+        if not serializer.is_valid():
+            return Response({
+                "status": 400,
+                "error": serilalizer_error_list(serializer.errors)
+            }, status=200)
+
+        try:
+            customer = User.objects.get(id=serializer.validated_data['customer'][7:])
+            
+        except User.DoesNotExist:
+            return Response({
+                "status": 400,
+                "message": "Customer not found."
+            }, status=200)
+
+        if customer.got_joining_package:
+            return Response({
+                "status": 400,
+                "message": "Customer already has a joining package."
+            }, status=200)
+        
+        Order.objects.create(
+            customer=customer,
+            products_info=[{"p_id":product_id, "qty": 1}],
+            distributer=request.user,
+            is_joinging_pakage=True,
+        )
+
+        customer.got_joining_package = True
+        customer.save()
+
+        return Response({
+            "status": 200,
+            "message": "Joining is distributed successfully."
+        }, status=200)

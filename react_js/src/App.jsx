@@ -16,6 +16,7 @@ import { ViewTeam } from "./Modules/User Management/ViewTeam";
 import { ContactSubmissionList } from "./Modules/ContactFormSubmission/ContactSubmissionList";
 import { DistributerLanding } from "./Modules/DistributerPanel/Dashboard/DistributerLanding";
 import { OrderList } from "./Modules/OrderManagement/OrderList";
+import { JoiningPackageDistribution } from "./Modules/DistributerPanel/JoiningPackageDistribution";
 
 function App() {
   return (
@@ -41,9 +42,10 @@ function App() {
 
         {/* distributer Landing */}
         <Route path="distributer/dashboard" element={<DistributerLanding />} />
+        <Route path="distributer/joing-package" element={<JoiningPackageDistribution />} />
 
         {/* Order Management */}
-        <Route path="order/list" element={<OrderList />} />
+        < Route path="order/list" element={<OrderList />} />
 
       </Routes>
 

@@ -165,3 +165,15 @@ class productCreateDetailUpdateDelete(APIView):
                     "id": "Product with the given ID does not exist."
                 }
             })
+        
+@method_decorator(access_limited_to('ADMIN,IT,DISTRIBUTER'), name='dispatch') 
+class JoiningProductList(APIView):
+    
+    def get(self, request):
+        product_list = Products.objects.get_all_joining_packages().order_by("-id")
+        serialized_data = ProductSerializer(product_list, many=True).data
+        return Response({
+
+            "status": 200,
+            "product_list": serialized_data,
+        })

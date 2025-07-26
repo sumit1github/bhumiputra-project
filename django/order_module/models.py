@@ -15,6 +15,7 @@ class Order(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     order_date = models.DateTimeField(auto_now_add=True)
     products_info = models.JSONField(default="[]") # [{"p_id": 1, "qty": 2}, {"p_id": 3, "qty": 1}]
+    is_joinging_pakage = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'order'
