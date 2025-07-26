@@ -68,10 +68,11 @@ class OrderCreation(APIView):
             customer_id = customer[7:] if len(customer) > 7 else customer
         
         total_price = sum(product.get("total_price", 0) for product in products_info)
+        total_bv = self.get_total_bv(products_info)
 
         if not customer_id:
             # No customer: apply 5% discount
-            final_amount = total_price * 0.95
+            final_amount = total_price - (total_bv * 0.05)
         else:
             # Customer exists: no discount
             final_amount = total_price
@@ -85,7 +86,7 @@ class OrderCreation(APIView):
 
         if customer and customer_id:
             customer_obj = User.objects.get(id=customer_id)
-            total_bv = self.get_total_bv(products_info)
+            
             self.commision_distribution(customer_obj, total_bv)
 
         return Response({

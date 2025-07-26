@@ -108,10 +108,14 @@ export const DistributerLanding = () => {
         return cartItems.reduce((total, item) => total + (item.sell_price * item.quantity), 0);
     };
 
+    const getTotalBV = () => {
+        return cartItems.reduce((total, item) => total + (item.bv_price * item.quantity), 0);
+    };
+
     const getDiscount = () => {
         if (!selectedUser) {
-            // 5% discount when no user is selected
-            return getSubtotal() * 0.05;
+            // 5% discount on total bv when no user is selected
+            return getTotalBV() * 0.05;
         }
         return 0;
     };
