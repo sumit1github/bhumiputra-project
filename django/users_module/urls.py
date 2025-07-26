@@ -10,5 +10,8 @@ urlpatterns = [
     path('team/<str:pk>', views.TeamView.as_view(), name='team-view'),
 
     path('user_cache_search', views.UserCacheSearch.as_view(), name='user-cache-search'),
+
+    # ----- password chnage -----
+    path('user_change_password', views.UserChangePassword.as_view()),
     
 ]

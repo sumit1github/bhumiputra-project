@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { CgClose } from "react-icons/cg";
-import { FaBox, FaTachometerAlt, FaUsers } from "react-icons/fa";
+import { FaBox, FaUsers, FaKey } from "react-icons/fa";
 import { IoMdRefresh, IoMdWallet } from "react-icons/io";
 import { useNavigate } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux';
 import { BsMicrosoftTeams, BsClockHistory } from "react-icons/bs";
 import { GrContactInfo } from "react-icons/gr";
 import { FcShop } from "react-icons/fc";
-
 
 
 import {
@@ -121,6 +120,7 @@ const AdminLayout = ({ children }) => {
                     <IoMdRefresh size={24} title="Refresh Profile" style={{ color: "aliceblue" }} onClick={refreshUserDetails} />
                   </>
                 )}
+                <FaKey onClick={() => navigate("/users/change-password")} size={18} title="Change Password" style={{ color: "aliceblue" }} />
                 <MdExitToApp size={26} title="Logout" onClick={handleLogout} style={{ color: "aliceblue" }} />
               </div>
 
@@ -130,16 +130,6 @@ const AdminLayout = ({ children }) => {
 
               <hr className="border-b" />
               <ul className="nav side_nav nav-pills  flex-column mb-auto">
-
-                {/* Dash-board */}
-                {/* <li className="nav-item">
-                  <div className={`d-flex m-1 align-items-center justify-content-between sidebar-padding sidebar-item-animated`}>
-                    <div className="d-flex align-items-center pointer gap-4 flex-grow-1">
-                      <FaTachometerAlt className="text-white" />
-                      <span onClick={() => handleNavigation('/dashboard')}>Dashboard</span>
-                    </div>
-                  </div>
-                </li> */}
 
                 {/* Users */}
                 {!userData?.user?.is_distributer && (

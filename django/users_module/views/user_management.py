@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django.db import transaction
 from decimal import Decimal
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.authtoken.models import Token
 
 from utils import serilalizer_error_list, paginate
@@ -15,14 +15,14 @@ from users_module.serializers import (
     UserCreateSerializer,
     InviteUserSerializer,
     UserUpdateSerializer,
-    
-    
+    PasswordChangeSerializer
 )
+
 from auth_module.models import User
 from auth_module.custom_decorator import access_limited_to
 from ..constants import JOINING_COMISSION, ACHIVER_LEVELS
 from auth_module.serilaizer import UserSerializer
-from utils import add_user_to_cache, cache_user_seaerch, repopulate_users_to_cache
+from utils import add_user_to_cache, cache_user_seaerch
 
 
 @method_decorator(access_limited_to('ADMIN,IT,USER'), name='dispatch') 
@@ -364,4 +364,35 @@ class UserCacheSearch(APIView):
         return Response({
             "status": 200,
             "users": users
+        })
+    
+class UserChangePassword(APIView):
+    """
+    API to change user password.
+    """
+
+    serializer = PasswordChangeSerializer
+
+    def post(self, request):
+
+        serializer = self.serializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({
+                "status": 400,
+                "error": serilalizer_error_list(serializer.errors)
+            })
+        
+        user = request.user
+        if not user.check_password(serializer.validated_data['oldPassword']):
+            return Response({
+                "status": 400,
+                "message": "Old password is incorrect."
+            })
+        
+        user.set_password(serializer.validated_data['newPassword'])
+        user.save()
+        
+        return Response({
+            "status": 200,
+            "message": "Password changed successfully."
         })

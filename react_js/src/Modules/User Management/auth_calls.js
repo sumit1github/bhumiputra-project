@@ -72,3 +72,14 @@ export const GetDirectUsersApiCall = () => {
     },
   });
 };
+
+// user password change request
+export const UserPassChangeApiCall = () => {
+  return useMutation({
+    mutationFn: async (formData) => {
+      console.log("Change Password Data:", formData);
+      const res = await apiClient.post(`/users/user_change_password`, formData);
+      return res.data;
+    },
+  });
+};

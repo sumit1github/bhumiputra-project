@@ -39,6 +39,7 @@ const UserUpdate = () => {
     "is_active": false,
     "invite_tokens": 0,
     "is_distributer": false,
+    "wallet_balance": 0,
   });
 
   // -------------Loading User Details from API----------------
@@ -72,6 +73,7 @@ const UserUpdate = () => {
         is_active: user_detaildata.user.is_active || false,
         invite_tokens: user_detaildata.user.invite_tokens || 0,
         is_distributer: user_detaildata.user.is_distributer || false,
+        wallet_balance: user_detaildata.user.wallet_balance || 0,
       };
       console.log("User Details:", sanitizedData);
       setFormData(sanitizedData);
@@ -268,7 +270,7 @@ const UserUpdate = () => {
                     <h3 className="section-title">Additional Information</h3>
                     <div className="row">
 
-                      <div className="col-md-4">
+                      <div className="col-md-3">
                         <div className="form-group">
                           <label className="form-label">Invite Tokens <span className="required">*</span></label>
                           <input id="invite_tokens" name="invite_tokens" value={formData.invite_tokens} onChange={handleChange} className="form-control" />
@@ -277,7 +279,16 @@ const UserUpdate = () => {
 
                       </div>
 
-                      <div className="col-md-4">
+                      <div className="col-md-3">
+                        <div className="form-group">
+                          <label className="form-label">Wallet Balance <span className="required"></span></label>
+                          <input type="number" id="wallet_balance" name="wallet_balance" value={formData.wallet_balance} onChange={handleChange} className="form-control" />
+                        </div>
+                        {formErrors.wallet_balance && <div className="text-danger">{formErrors.wallet_balance}</div>}
+
+                      </div>
+
+                      <div className="col-md-3">
                         <div className="form-group">
                           <label className="form-label">Account Status</label>
                           <div className="d-flex align-items-center mt-2">

@@ -168,6 +168,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'is_active',
             "invite_tokens",
             "password",
+            "wallet_balance"
             
         ]
         extra_kwargs = {
@@ -182,9 +183,39 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             'contact2': {'required': False},
             'invite_tokens': {'required': True},
             'password': {'required': False},
+            'wallet_balance': {'required': True},
         }
 
     def validate_invite_tokens(self, value):
         if value < 0:
             raise serializers.ValidationError("Invite tokens cannot be negative.")
         return value
+
+
+class PasswordChangeSerializer(serializers.Serializer):
+    oldPassword = serializers.CharField(
+        write_only=True,
+        required=True,
+        help_text="Enter your old password"
+    )
+    confirmPassword = serializers.CharField(
+        write_only=True,
+        required=True,
+        help_text="Confirm your password"
+    )
+    newPassword = serializers.CharField(
+        write_only=True,
+        required=True,
+        help_text="Confirm your password"
+    )
+
+
+    def validate(self, data):
+
+        password = data.get('newPassword')
+        confirmPassword = data.pop('confirmPassword', None)
+
+        if password != confirmPassword:
+            raise serializers.ValidationError({"password": "Passwords do not match.", "confirm_password": "Passwords do not match."})
+
+        return data

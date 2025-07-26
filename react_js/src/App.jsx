@@ -17,6 +17,7 @@ import { ContactSubmissionList } from "./Modules/ContactFormSubmission/ContactSu
 import { DistributerLanding } from "./Modules/DistributerPanel/Dashboard/DistributerLanding";
 import { OrderList } from "./Modules/OrderManagement/OrderList";
 import { JoiningPackageDistribution } from "./Modules/DistributerPanel/JoiningPackageDistribution";
+import { ChangePassword } from "./Modules/User Management/ChangePassword";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="users" element={<UserList />} />
         <Route path="users/add" element={<UserAdd />} />
         <Route path="users/update/:user_id" element={<UserUpdate />} />
+        <Route path="users/change-password" element={<ChangePassword />} />
 
         {/* user management */}
         <Route path="products/list" element={<ProductList />} />
@@ -46,6 +48,7 @@ function App() {
 
         {/* Order Management */}
         < Route path="order/list" element={<OrderList />} />
+
 
       </Routes>
 

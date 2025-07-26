@@ -2,7 +2,9 @@ from .user_serializer import (
     UserListSerializer, 
     UserCreateSerializer,
     InviteUserSerializer,
-    UserUpdateSerializer
+    UserUpdateSerializer,
+    PasswordChangeSerializer
+
 )
 
 from .profile import (
@@ -14,5 +16,6 @@ __all__ = [
     "UserCreateSerializer",
     "ProfileDetailsSerializer",
     "InviteUserSerializer",
-    "TeamViewSerializer"
+    "TeamViewSerializer",
+    "PasswordChangeSerializer"
 ]

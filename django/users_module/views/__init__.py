@@ -2,7 +2,8 @@ from .user_management import (
     UserFilter, 
     InviteUser,
     UserDetailsUpdateView,
-    UserCacheSearch
+    UserCacheSearch,
+    UserChangePassword
 )
 from .team import TeamView
 
@@ -11,5 +12,6 @@ __all__ = [
     "InviteUser",
     "UserDetailsUpdateView",
     "TeamView",
-    "UserCacheSearch"
+    "UserCacheSearch",
+    "UserChangePassword",
 ]

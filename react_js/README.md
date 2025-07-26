@@ -1,4 +1,4 @@
-const { mutate: apiCall, data: apiData, isLoading: apiIsLoading, isError: apiIsError, error: apiError } = getProductList();
+const { mutate: chnagePassCall, data: chnagePassData, isLoading: chnagePassIsLoading, isError: chnagePassIsError, error: chnagePassError } = getProductList();
 
 80
 
