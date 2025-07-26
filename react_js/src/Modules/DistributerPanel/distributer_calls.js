@@ -19,3 +19,31 @@ export const searchUser = () => {
 
     });
 };
+
+export const placeOrder = () => {
+    return useMutation({
+        mutationFn: async (order_data) => {
+            const res = await apiClient.post("/order/create/", order_data);
+            return res.data;
+        },
+
+    });
+};
+
+export const getJoiningPackageList = () => {
+    return useMutation({
+        mutationFn: async () => {
+            const res = await apiClient.get(`/product/get_joining_packages`);
+            return res.data;
+        },
+    });
+};
+
+export const distributePackage = () => {
+    return useMutation({
+        mutationFn: async (package_data) => {
+            const res = await apiClient.post("/order/distribute_joining_package/", package_data);
+            return res.data;
+        },
+    });
+};

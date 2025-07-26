@@ -15,6 +15,7 @@ class Order(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     order_date = models.DateTimeField(auto_now_add=True)
     products_info = models.JSONField(default="[]") # [{"p_id": 1, "qty": 2}, {"p_id": 3, "qty": 1}]
+    is_joinging_pakage = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'order'
@@ -26,11 +27,11 @@ class Order(models.Model):
         if not self.id_prefix:
             self.id_prefix = generate_unique_id(5)
 
-        self.products_info = json.dumps(self.products_info)
-
         if not self.discount and not self.customer:
             self.discount = 5.00
         
+        self.products_info = json.dumps(self.products_info)
+
         super(Order, self).save(*args, **kwargs)
 
     @property
@@ -57,3 +58,7 @@ class Order(models.Model):
     def get_not_discounted_price(self):
         if self.discount:
             return self.total_amount if self.discount <= 0 else self.total_amount * (1 - self.discount / 100)
+    
+    @property
+    def uid(self):
+        return f"{self.id_prefix}{self.id}"

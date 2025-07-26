@@ -41,6 +41,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     invitation_chain_meta_list = models.JSONField(null=True, blank = True)
 
+    got_joining_package = models.BooleanField(default=False)
+
     USERNAME_FIELD = "email"	
     REQUIRED_FIELDS = ["password","contact1"]
     

@@ -90,7 +90,7 @@ export const ViewTeam = () => {
                                     <div>
                                         <h6 className="mb-1 fw-bold user-name">{user.full_name}</h6>
                                         <div className="user-details">
-                                            <small className="text-muted d-block">ID: {user.id_prefix}</small>
+                                            <small className="text-muted d-block">ID: {user.id_prefix}{user.id}</small>
                                             <small className="text-muted d-block">Joined: {new Date(user.date_joined).toLocaleDateString()}</small>
                                             <small className="text-muted d-block">Tokens: {user.invite_tokens}</small>
                                         </div>

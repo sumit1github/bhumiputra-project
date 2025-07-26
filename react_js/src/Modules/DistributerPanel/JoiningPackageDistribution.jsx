@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
-import { FaSearch, FaShoppingCart, FaPlus, FaMinus, FaTrash, FaUser, FaBox, FaCheckCircle } from 'react-icons/fa';
+import { FaSearch, FaShoppingCart, FaPlus, FaTrash, FaUser, FaBox, FaCheckCircle } from 'react-icons/fa';
 import { Container, Row, Col, Card, Button, Form, Modal, Badge, Alert } from 'react-bootstrap';
 
 
-import AdminLayout from "../../IT-Dashboard/AdminLayout";
-import './DistributerLanding.css';
-import { getProductList, searchUser, placeOrder } from '../distributer_calls';
+import AdminLayout from "../IT-Dashboard/AdminLayout";
+import '../DistributerPanel/Dashboard/DistributerLanding.css';
+import { getJoiningPackageList, searchUser, distributePackage } from './distributer_calls';
 
-export const DistributerLanding = () => {
+export const JoiningPackageDistribution = () => {
+
     const [searchProductQuery, setSearchProductQuery] = useState('');
     const [cartItems, setCartItems] = useState([]);
     const [showCartModal, setShowCartModal] = useState(false);
@@ -19,7 +20,7 @@ export const DistributerLanding = () => {
     const [allProducts, setAllProducts] = useState([]);
 
     // Fetch product list using the API call
-    const { mutate: loadProductList, data: productData, isLoading: productIsLoading, isError: productIsError, error: productError } = getProductList();
+    const { mutate: loadProductList, data: productData, isLoading: productIsLoading, isError: productIsError, error: productError } = getJoiningPackageList();
     useEffect(() => {
         loadProductList();
     }, []);
@@ -76,50 +77,13 @@ export const DistributerLanding = () => {
     };
 
     const addToCart = (product) => {
-        const existingItem = cartItems.find(item => item.id === product.id);
-        if (existingItem) {
-            setCartItems(cartItems.map(item =>
-                item.id === product.id
-                    ? { ...item, quantity: item.quantity + 1 }
-                    : item
-            ));
-        } else {
-            setCartItems([...cartItems, { ...product, quantity: 1 }]);
-        }
-    };
-
-    const updateQuantity = (productId, newQuantity) => {
-        if (newQuantity <= 0) {
-            removeFromCart(productId);
-            return;
-        }
-        setCartItems(cartItems.map(item =>
-            item.id === productId
-                ? { ...item, quantity: newQuantity }
-                : item
-        ));
+        // Clear existing cart and add only the new product
+        setCartItems([{ ...product, quantity: 1 }]);
     };
 
     const removeFromCart = (productId) => {
-        setCartItems(cartItems.filter(item => item.id !== productId));
+        setCartItems([]);
     };
-
-    const getSubtotal = () => {
-        return cartItems.reduce((total, item) => total + (item.sell_price * item.quantity), 0);
-    };
-
-    const getDiscount = () => {
-        if (!selectedUser) {
-            // 5% discount when no user is selected
-            return getSubtotal() * 0.05;
-        }
-        return 0;
-    };
-
-    const getTotalAmount = () => {
-        return getSubtotal() - getDiscount();
-    };
-
 
     // ------------------ user search functionality ------------------
     const { mutate: searchUserData, data: user_data, error: userError } = searchUser();
@@ -166,23 +130,29 @@ export const DistributerLanding = () => {
 
 
     // ------------------- order place ------------------------
-    const { mutate: orderPlaceCall, data: orderPlaceData, isLoading: orderPlaceIsLoading, isError: orderPlaceIsError, error: orderPlaceError } = placeOrder();
+    const { mutate: orderPlaceCall, data: orderPlaceData, isLoading: orderPlaceIsLoading, isError: orderPlaceIsError, error: orderPlaceError } = distributePackage();
     const handlePlaceOrder = () => {
+        // Validate that a user is selected before placing order
+        if (!selectedUser) {
+            toast.error("Please select a customer before placing the order.");
+            return;
+        }
+
+        // Validate that cart has items
+        if (!cartItems || cartItems.length === 0) {
+            toast.error("Your cart is empty. Please add items to place an order.");
+            return;
+        }
 
         orderPlaceCall({
-            "customer": selectedUser ? selectedUser.id : null,
-            "products_info": cartItems.map(item => ({
-                "p_id": item.id,
-                "qty": item.quantity,
-                "total_bv": item.bv_price * item.quantity,
-                "total_price": item.sell_price * item.quantity
-            }))
+            "customer": selectedUser.id,
+            "product_id": cartItems[0].id
         });
-
     }
 
     useEffect(() => {
         if (orderPlaceData) {
+            console.log(orderPlaceData);
             if (orderPlaceData?.status === 200) {
                 setCartItems([]);
                 setShowCartModal(false);
@@ -204,9 +174,9 @@ export const DistributerLanding = () => {
                             <Col>
                                 <h1 className="page-title">
                                     <FaUser className="me-2" />
-                                    Distributor Dashboard
+                                    Joining Package Distribution
                                 </h1>
-                                <p className="page-subtitle">Manage orders and serve customers efficiently</p>
+                                <p className="page-subtitle">Find And distribute Joining Package</p>
                             </Col>
                             <Col xs="auto">
                                 <div className="cart-button-container">
@@ -387,15 +357,6 @@ export const DistributerLanding = () => {
                                     <FaBox className="me-2" />
                                     Products
                                 </h5>
-                                <div className="product-search">
-                                    <Form.Control
-                                        type="text"
-                                        placeholder="Search products..."
-                                        value={searchProductQuery}
-                                        onChange={(e) => setSearchProductQuery(e.target.value)}
-                                        className="product-search-input"
-                                    />
-                                </div>
                             </div>
 
                             <Row>
@@ -415,9 +376,6 @@ export const DistributerLanding = () => {
                                                     <Card.Title className="product-name">
                                                         {product.name}
                                                     </Card.Title>
-                                                    <div className="product-price-large">
-                                                        ₹{product.sell_price}
-                                                    </div>
                                                 </div>
 
                                                 <p className="product-description">
@@ -426,13 +384,26 @@ export const DistributerLanding = () => {
 
                                                 <div className="product-footer mt-auto">
                                                     <Button
-                                                        variant="primary"
+                                                        variant={cartItems.find(item => item.id === product.id) ? "danger" : "primary"}
                                                         className="add-to-cart-btn w-100"
-                                                        onClick={() => addToCart(product)}
+                                                        onClick={() => cartItems.find(item => item.id === product.id)
+                                                            ? removeFromCart(product.id)
+                                                            : addToCart(product)}
                                                         disabled={product.stock === 0}
                                                     >
-                                                        <FaPlus className="me-2" />
-                                                        {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                                                        {product.stock === 0 ? (
+                                                            'Out of Stock'
+                                                        ) : cartItems.find(item => item.id === product.id) ? (
+                                                            <>
+                                                                <FaTrash className="me-2" />
+                                                                Remove
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <FaPlus className="me-2" />
+                                                                Add to Cart
+                                                            </>
+                                                        )}
                                                     </Button>
                                                 </div>
                                             </Card.Body>
@@ -480,7 +451,6 @@ export const DistributerLanding = () => {
                                             </div>
                                             <div className="cart-item-details">
                                                 <h6 className="cart-item-name">{item.name}</h6>
-                                                <div className="cart-item-price">₹{item.sell_price}</div>
                                                 <small className="cart-item-description">{item.short_description}</small>
                                             </div>
                                         </div>
@@ -494,30 +464,7 @@ export const DistributerLanding = () => {
                                             </div>
                                             <div className="cart-item-details">
                                                 <h6 className="cart-item-name">{item.name}</h6>
-                                                <div className="cart-item-price">₹{item.sell_price}</div>
                                                 <small className="cart-item-description">{item.short_description}</small>
-                                            </div>
-                                            <div className="cart-item-quantity">
-                                                <Button
-                                                    variant="outline-secondary"
-                                                    size="sm"
-                                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                                    className="quantity-btn"
-                                                >
-                                                    <FaMinus />
-                                                </Button>
-                                                <span className="quantity-display">{item.quantity}</span>
-                                                <Button
-                                                    variant="outline-secondary"
-                                                    size="sm"
-                                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                    className="quantity-btn"
-                                                >
-                                                    <FaPlus />
-                                                </Button>
-                                            </div>
-                                            <div className="cart-item-total">
-                                                ₹{item.sell_price * item.quantity}
                                             </div>
                                             <Button
                                                 variant="outline-danger"
@@ -531,28 +478,6 @@ export const DistributerLanding = () => {
 
                                         {/* Mobile Cart Item Controls */}
                                         <div className="cart-item-controls-mobile d-md-none">
-                                            <div className="cart-item-quantity">
-                                                <Button
-                                                    variant="outline-secondary"
-                                                    size="sm"
-                                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                                    className="quantity-btn"
-                                                >
-                                                    <FaMinus />
-                                                </Button>
-                                                <span className="quantity-display">{item.quantity}</span>
-                                                <Button
-                                                    variant="outline-secondary"
-                                                    size="sm"
-                                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                    className="quantity-btn"
-                                                >
-                                                    <FaPlus />
-                                                </Button>
-                                            </div>
-                                            <div className="cart-item-total">
-                                                ₹{item.sell_price * item.quantity}
-                                            </div>
                                             <Button
                                                 variant="outline-danger"
                                                 size="sm"
@@ -569,27 +494,6 @@ export const DistributerLanding = () => {
                     </Modal.Body>
                     {cartItems.length > 0 && (
                         <Modal.Footer className="cart-modal-footer">
-                            <div className="cart-total-breakdown">
-                                <div className="breakdown-row">
-                                    <span>Subtotal:</span>
-                                    <span>₹{getSubtotal().toFixed(2)}</span>
-                                </div>
-                                {getDiscount() > 0 && (
-                                    <div className="breakdown-row discount-row">
-                                        <span>Discount (5% - No Customer):</span>
-                                        <span>-₹{getDiscount().toFixed(2)}</span>
-                                    </div>
-                                )}
-                                {selectedUser && (
-                                    <div className="breakdown-row customer-row">
-                                        <span>Customer: {selectedUser.name}</span>
-                                        <span>No Discount</span>
-                                    </div>
-                                )}
-                                <div className="breakdown-row total-row">
-                                    <h5>Total: ₹{getTotalAmount().toFixed(2)}</h5>
-                                </div>
-                            </div>
                             <div className="cart-actions">
                                 <Button
                                     variant="success"

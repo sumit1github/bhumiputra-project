@@ -30,6 +30,11 @@ const Login = () => {
       onSuccess: (data) => {
         console.log("Login successful:", data);
         dispatch(loginSuccess(data));
+
+        if (data?.user?.is_distributer) {
+          navigate("/distributer/dashboard");
+          return;
+        }
         navigate("/users");
       },
     });
